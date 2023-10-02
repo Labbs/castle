@@ -19,3 +19,14 @@
 
 # Go workspace file
 go.work
+
+# air
+.air*
+
+# sqlite
+*.db
+
+# app ui
+**/node_modules
+**/dist
+**/tmp
