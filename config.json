@@ -1,7 +1,8 @@
 {
   "debug": true,
+  "pretty-logs": true,
   "port": 8080,
-  "enable-http-logs": true,
+  "enable-http-logs": false,
 
   "session": {
     "secret-key": "QWERTYUIOPqwertyuiop1234567890",
