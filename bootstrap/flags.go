@@ -24,6 +24,14 @@ func GenericFlags() []cli.Flag {
 			Usage:       "Enable debug mode",
 			Destination: &config.Debug,
 		}),
+		altsrc.NewBoolFlag(&cli.BoolFlag{
+			Name:        "pretty-logs",
+			Aliases:     []string{"pl"},
+			EnvVars:     []string{"PRETTY_LOGS"},
+			Value:       false,
+			Usage:       "Enable pretty logs",
+			Destination: &config.PrettyLogs,
+		}),
 	}
 }
 

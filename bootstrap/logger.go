@@ -23,5 +23,9 @@ func InitLogger() zerolog.Logger {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
+	if config.PrettyLogs {
+		logger = logger.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
+
 	return logger
 }
