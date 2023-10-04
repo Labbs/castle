@@ -1,12 +1,13 @@
 package bootstrap
 
 import (
+	"github.com/labbs/castle/config"
 	"github.com/labbs/castle/internal"
 	"github.com/labbs/castle/modules/user/domain"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func InitOrMigrateDatabase(app Application) error {
+func InitOrMigrateDatabase(app Application, c config.Config) error {
 	db := app.Db
 	logger := app.Logger
 	err := db.AutoMigrate(
@@ -22,9 +23,14 @@ func InitOrMigrateDatabase(app Application) error {
 		return nil
 	}
 
-	pwd := internal.RandomString(30)
+	var r []byte
+	if !c.LocalDev {
+		r = internal.RandomString(30)
+	} else {
+		r = []byte("localdev")
+	}
 
-	bytes, err := bcrypt.GenerateFromPassword(pwd, 14)
+	pwd, err := bcrypt.GenerateFromPassword(r, 14)
 	if err != nil {
 		logger.Error().Err(err).Msg("Error on generate password for default user")
 		return err
@@ -32,7 +38,7 @@ func InitOrMigrateDatabase(app Application) error {
 
 	defaultUser := domain.User{
 		Username: "default",
-		Password: string(bytes),
+		Password: string(pwd),
 	}
 
 	err = db.Create(&defaultUser).Error
@@ -41,6 +47,6 @@ func InitOrMigrateDatabase(app Application) error {
 		return err
 	}
 
-	logger.Info().Str("username", defaultUser.Username).Str("password", string(pwd)).Msg("Default user created")
+	logger.Info().Str("username", defaultUser.Username).Str("password", string(r)).Msg("Default user created")
 	return nil
 }

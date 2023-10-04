@@ -3,6 +3,7 @@
   "pretty-logs": true,
   "port": 8080,
   "enable-http-logs": false,
+  "local-dev": true,
 
   "session": {
     "secret-key": "QWERTYUIOPqwertyuiop1234567890",

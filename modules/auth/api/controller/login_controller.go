@@ -1,3 +1,5 @@
+// File: login_controller.go
+// Code Responsible for handling login requests
 package controller
 
 import (
@@ -8,6 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// AuthController struct
 type AuthController struct {
 	Repository repository.AuthRepository
 	Logger     zerolog.Logger

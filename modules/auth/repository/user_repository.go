@@ -2,7 +2,7 @@ package repository
 
 import (
 	initBootstrap "github.com/labbs/castle/bootstrap"
-	"github.com/labbs/castle/internal/bus"
+	"github.com/labbs/castle/modules/auth/domain"
 	"github.com/labbs/castle/modules/auth/internal/tokenutil"
 )
 
@@ -14,14 +14,14 @@ func NewAuthRepository(busMessages chan initBootstrap.Message) AuthRepository {
 	return AuthRepository{BusMessages: busMessages}
 }
 
-func (d *AuthRepository) GetUserByUsername(username string) (bus.GetUserByUsernameResponse, error) {
+func (d *AuthRepository) GetUserByUsername(username string) (domain.BusGetUserByUsernameResponse, error) {
 	responseChan := make(chan initBootstrap.Message)
 	d.BusMessages <- initBootstrap.Message{Action: "user:get_by_username", Data: username, Response: responseChan}
 	response := <-responseChan
 	if response.Error != nil {
-		return bus.GetUserByUsernameResponse{}, response.Error
+		return domain.BusGetUserByUsernameResponse{}, response.Error
 	}
-	return response.Data.(bus.GetUserByUsernameResponse), nil
+	return response.Data.(domain.BusGetUserByUsernameResponse), nil
 }
 
 func (d *AuthRepository) CreateAccessToken(username string) (string, error) {

@@ -10,20 +10,20 @@ import (
 	"github.com/labbs/castle/config"
 )
 
-func InitLogger() zerolog.Logger {
+func InitLogger(c config.Config) zerolog.Logger {
 	host, _ := os.Hostname()
 	logger := zerolog.New(os.Stderr).With().
 		Caller().
 		Timestamp().
 		Str("host", host).
-		Str("version", config.Version).
+		Str("version", c.Version).
 		Logger()
 
-	if config.Debug {
+	if c.Debug {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	if config.PrettyLogs {
+	if c.PrettyLogs {
 		logger = logger.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 

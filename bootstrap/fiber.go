@@ -15,7 +15,7 @@ import (
 	"github.com/labbs/castle/config"
 )
 
-func InitFiber(logger zerolog.Logger) *fiber.App {
+func InitFiber(logger zerolog.Logger, c config.Config) *fiber.App {
 	fconfig := fiber.Config{
 		JSONEncoder:           json.Marshal,
 		JSONDecoder:           json.Unmarshal,
@@ -25,7 +25,7 @@ func InitFiber(logger zerolog.Logger) *fiber.App {
 	r := fiber.New(fconfig)
 
 	// enable gofiber logs (custom middleware)
-	if config.EnableHTTPLogs {
+	if c.EnableHTTPLogs {
 		r.Use(fiberLogger(logger))
 	}
 

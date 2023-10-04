@@ -14,7 +14,7 @@ func GenericFlags() []cli.Flag {
 			EnvVars:     []string{"CONFIG"},
 			Usage:       "Config file path",
 			Value:       "config.json",
-			Destination: &config.ConfigFile,
+			Destination: &config.AppConfig.ConfigFile,
 		},
 		altsrc.NewBoolFlag(&cli.BoolFlag{
 			Name:        "debug",
@@ -22,7 +22,7 @@ func GenericFlags() []cli.Flag {
 			EnvVars:     []string{"DEBUG"},
 			Value:       false,
 			Usage:       "Enable debug mode",
-			Destination: &config.Debug,
+			Destination: &config.AppConfig.Debug,
 		}),
 		altsrc.NewBoolFlag(&cli.BoolFlag{
 			Name:        "pretty-logs",
@@ -30,7 +30,15 @@ func GenericFlags() []cli.Flag {
 			EnvVars:     []string{"PRETTY_LOGS"},
 			Value:       false,
 			Usage:       "Enable pretty logs",
-			Destination: &config.PrettyLogs,
+			Destination: &config.AppConfig.PrettyLogs,
+		}),
+		altsrc.NewBoolFlag(&cli.BoolFlag{
+			Name:        "local-dev",
+			Aliases:     []string{"ld"},
+			EnvVars:     []string{"LOCAL_DEV"},
+			Value:       false,
+			Usage:       "Enable local development mode",
+			Destination: &config.AppConfig.LocalDev,
 		}),
 	}
 }
@@ -42,14 +50,14 @@ func DatabaseFlags() []cli.Flag {
 			Usage:       "Database DSN",
 			EnvVars:     []string{"DATABASE_DSN"},
 			Value:       "castle.db",
-			Destination: &config.Database.DSN,
+			Destination: &config.AppConfig.Database.DSN,
 		}),
 		altsrc.NewStringFlag(&cli.StringFlag{
 			Name:        "database.engine",
 			Usage:       "Database Engine",
 			EnvVars:     []string{"DATABASE_ENGINE"},
 			Value:       "sqlite3",
-			Destination: &config.Database.Engine,
+			Destination: &config.AppConfig.Database.Engine,
 		}),
 	}
 }
@@ -61,14 +69,14 @@ func ServerFlags() []cli.Flag {
 			Aliases:     []string{"p"},
 			EnvVars:     []string{"PORT"},
 			Usage:       "Server Port",
-			Destination: &config.Port,
+			Destination: &config.AppConfig.Port,
 		}),
 		altsrc.NewBoolFlag(&cli.BoolFlag{
 			Name:        "enable-http-logs",
 			Aliases:     []string{"ehl"},
 			EnvVars:     []string{"ENABLE_HTTP_LOGS"},
 			Usage:       "Enable http server logs",
-			Destination: &config.EnableHTTPLogs,
+			Destination: &config.AppConfig.EnableHTTPLogs,
 		}),
 	}
 	flags = append(flags, GenericFlags()...)

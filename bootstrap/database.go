@@ -15,7 +15,7 @@ import (
 	"github.com/labbs/castle/config"
 )
 
-func InitDatabase(logger zerolog.Logger) *gorm.DB {
+func InitDatabase(logger zerolog.Logger, c config.Config) *gorm.DB {
 	newLogger := l.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 		l.Config{
@@ -29,13 +29,13 @@ func InitDatabase(logger zerolog.Logger) *gorm.DB {
 	var db *gorm.DB
 	var err error
 
-	switch engine := config.Database.Engine; engine {
+	switch engine := config.AppConfig.Database.Engine; engine {
 	case "mysql":
-		db, err = gorm.Open(mysql.Open(config.Database.DSN), &gorm.Config{Logger: newLogger})
+		db, err = gorm.Open(mysql.Open(c.Database.DSN), &gorm.Config{Logger: newLogger})
 	case "postgres":
-		db, err = gorm.Open(postgres.Open(config.Database.DSN), &gorm.Config{Logger: newLogger})
+		db, err = gorm.Open(postgres.Open(c.Database.DSN), &gorm.Config{Logger: newLogger})
 	default:
-		db, err = gorm.Open(sqlite.Open(config.Database.DSN), &gorm.Config{Logger: newLogger})
+		db, err = gorm.Open(sqlite.Open(c.Database.DSN), &gorm.Config{Logger: newLogger})
 	}
 
 	if err != nil {

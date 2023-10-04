@@ -12,8 +12,10 @@ import (
 
 	authBootstrap "github.com/labbs/castle/modules/auth/bootstrap"
 	authModule "github.com/labbs/castle/modules/auth/cmd"
+	projectModule "github.com/labbs/castle/modules/project/cmd"
+	repositoryModule "github.com/labbs/castle/modules/repository/cmd"
+	taskModule "github.com/labbs/castle/modules/task/cmd"
 
-	coreModule "github.com/labbs/castle/modules/core/cmd"
 	userModule "github.com/labbs/castle/modules/user/cmd"
 	"github.com/urfave/cli/v2"
 	"github.com/urfave/cli/v2/altsrc"
@@ -40,25 +42,27 @@ func main() {
 			Flags:  flags,
 			Before: altsrc.InitInputSourceWithContext(flags, altsrc.NewJSONSourceFromFlagFunc("config")),
 			Action: func(c *cli.Context) error {
-				appBootstrap := bootstrap.App()
+				appBootstrap := bootstrap.App(&config.AppConfig)
 
-				if config.Debug {
-					appBootstrap.Logger.Debug().Interface("fiber.routes", appBootstrap.Fiber.GetRoutes()).Msg("fiber routes")
-				}
+				// if config.AppConfig.Debug {
+				// 	appBootstrap.Logger.Debug().Interface("fiber.routes", appBootstrap.Fiber.GetRoutes()).Msg("fiber routes")
+				// }
 
 				authModule.Init(appBootstrap)
 				userModule.Init(appBootstrap)
-				coreModule.Init(appBootstrap)
+				projectModule.Init(appBootstrap)
+				taskModule.Init(appBootstrap)
+				repositoryModule.Init(appBootstrap)
 
-				appBootstrap.Logger.Info().Str("event", "server.start").Msg("app listening on 0.0.0.0:" + strconv.Itoa(config.Port))
-				return appBootstrap.Fiber.Listen(":" + strconv.Itoa(config.Port))
+				appBootstrap.Logger.Info().Str("event", "server.start").Msg("app listening on 0.0.0.0:" + strconv.Itoa(config.AppConfig.Port))
+				return appBootstrap.Fiber.Listen(":" + strconv.Itoa(config.AppConfig.Port))
 			},
 		},
 	}
 
 	app.Commands = append(app.Commands, commands...)
 
-	config.Version = version
+	config.AppConfig.Version = version
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
