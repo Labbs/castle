@@ -27,7 +27,7 @@ func InitOrMigrateDatabase(app Application, c config.Config) error {
 	if !c.LocalDev {
 		r = internal.RandomString(30)
 	} else {
-		r = []byte("localdev")
+		r = []byte("default")
 	}
 
 	pwd, err := bcrypt.GenerateFromPassword(r, 14)

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"github.com/goccy/go-json"
+
 	initBootstrap "github.com/labbs/castle/bootstrap"
 	"github.com/labbs/castle/modules/auth/domain"
 	"github.com/labbs/castle/modules/auth/internal/tokenutil"
@@ -21,7 +23,14 @@ func (d *AuthRepository) GetUserByUsername(username string) (domain.BusGetUserBy
 	if response.Error != nil {
 		return domain.BusGetUserByUsernameResponse{}, response.Error
 	}
-	return response.Data.(domain.BusGetUserByUsernameResponse), nil
+
+	var user domain.BusGetUserByUsernameResponse
+	err := json.Unmarshal(response.Data.([]byte), &user)
+	if err != nil {
+		return domain.BusGetUserByUsernameResponse{}, err
+	}
+
+	return user, nil
 }
 
 func (d *AuthRepository) CreateAccessToken(username string) (string, error) {

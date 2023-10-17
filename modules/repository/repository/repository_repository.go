@@ -45,3 +45,8 @@ func (d *RepositoryRepository) EditRepository(repository domain.Repository) erro
 	r := d.database.Save(&repository)
 	return r.Error
 }
+
+func (d *RepositoryRepository) DeleteRepository(id string) error {
+	r := d.database.Where("id = ?", id).Delete(&domain.Repository{})
+	return r.Error
+}

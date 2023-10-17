@@ -12,6 +12,9 @@ func JwtAuthMiddleware() fiber.Handler {
 		if c.Path() == "/api/auth/login" || c.Path() == "/api/auth/refresh" {
 			return c.Next()
 		}
+		if strings.Contains(c.Path(), "/app") || strings.Contains(c.Path(), "/static") || c.Path() == "/" {
+			return c.Next()
+		}
 		authHeader := c.Get("Authorization")
 		if authHeader == "" {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{

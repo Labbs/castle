@@ -9,10 +9,11 @@ import (
 )
 
 type Application struct {
-	Db     *gorm.DB
-	Logger zerolog.Logger
-	Fiber  *fiber.App
-	Bus    *initBootstrap.Module
+	Db             *gorm.DB
+	Logger         zerolog.Logger
+	FiberApiRouter fiber.Router
+	Fiber          *fiber.App
+	Bus            *initBootstrap.Module
 }
 
 func App(initBootstrapApp *initBootstrap.Application) Application {
@@ -21,6 +22,7 @@ func App(initBootstrapApp *initBootstrap.Application) Application {
 	app.Logger = InitLogger(initBootstrapApp.Logger)
 	InitOrMigrateDatabase(*app, *initBootstrapApp.AppConfig)
 	app.Fiber = initBootstrapApp.Fiber
+	app.FiberApiRouter = initBootstrapApp.FiberApiRouter
 	app.Bus = initBootstrapApp.Bus
 
 	return *app

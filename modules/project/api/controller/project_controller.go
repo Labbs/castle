@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/utils"
 	"github.com/labbs/castle/modules/project/domain"
 	"github.com/labbs/castle/modules/project/repository"
 	"github.com/rs/zerolog"
@@ -37,37 +38,25 @@ func (pc *ProjectController) GetProjectById(c *fiber.Ctx) error {
 	})
 }
 
-// func (pc *ProjectController) CreateProject(c *fiber.Ctx) error {
-// 	project := new(domain.Project)
-// 	if err := c.BodyParser(project); err != nil {
-// 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.create").Msg("failed to parse project")
-// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse project", "status": "error"})
-// 	}
+func (pc *ProjectController) CreateProject(c *fiber.Ctx) error {
+	project := new(domain.Project)
+	if err := c.BodyParser(project); err != nil {
+		pc.Logger.Error().Err(err).Str("event", "api.controller.project.create").Msg("failed to parse project")
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse project", "status": "error"})
+	}
 
-// 	project.Id = utils.UUID()
+	project.Id = utils.UUID()
 
-// 	if err := pc.Repository.CreateProject(*project); err != nil {
-// 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.create").Msg("failed to create project")
-// 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create project", "status": "error"})
-// 	}
+	if err := pc.Repository.CreateProject(*project); err != nil {
+		pc.Logger.Error().Err(err).Str("event", "api.controller.project.create").Msg("failed to create project")
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create project", "status": "error"})
+	}
 
-// 	defaultEnvironment := domain.Environment{
-// 		Id:          utils.UUID(),
-// 		Name:        "Default",
-// 		ProjectId:   project.Id,
-// 		Description: "Default environment",
-// 	}
-
-// 	if err := pc.Repository.CreateEnvironment(defaultEnvironment); err != nil {
-// 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.create").Msg("failed to create default environment")
-// 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create default environment", "status": "error"})
-// 	}
-
-// 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-// 		"project": project,
-// 		"message": "Project created",
-// 	})
-// }
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"project": project,
+		"message": "Project created",
+	})
+}
 
 func (pc *ProjectController) UpdateProject(c *fiber.Ctx) error {
 	projectId := c.Params("id")

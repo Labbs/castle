@@ -14,7 +14,7 @@ func NewUserRouter(app bootstrap.Application) {
 		Logger:     app.Logger,
 	}
 
-	gr := app.Fiber.Group("/api/user")
+	gr := app.FiberApiRouter.Group("/user")
 
 	gr.Get("/", pc.Get)
 	gr.Put("/username", pc.EditUsername)

@@ -1,6 +1,6 @@
 package internal
 
-import "encoding/json"
+import "github.com/goccy/go-json"
 
 func StructToString(obj interface{}) (newString string, err error) {
 	data, err := json.Marshal(obj) // Convert to a json string

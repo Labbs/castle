@@ -14,5 +14,6 @@ func NewAuthRouter(app bootstrap.Application) {
 		Logger:     app.Logger,
 	}
 
-	app.Fiber.Post("/api/auth/login", lc.Login)
+	gr := app.FiberApiRouter.Group("/auth")
+	gr.Post("/login", lc.Login)
 }

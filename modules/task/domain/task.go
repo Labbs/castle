@@ -2,8 +2,9 @@ package domain
 
 import (
 	"database/sql/driver"
-	"encoding/json"
 	"time"
+
+	"github.com/goccy/go-json"
 )
 
 type Task struct {
@@ -11,9 +12,9 @@ type Task struct {
 	Name        string `json:"name"`
 	Description string `json:"description,omitempty"`
 
-	ProjectId     string        `json:"project_id"`
-	EnvironmentId string        `json:"environment_id"`
-	Variables     []interface{} `json:"variables,omitempty" gorm:"-"`
+	ProjectId       string        `json:"project_id"`
+	EnvironmentName string        `json:"environment_name,omitempty"`
+	Variables       VariablesList `json:"variables,omitempty"`
 
 	RepositoryId   string `json:"repository_id"`
 	RepositoryPath string `json:"repository_path"`
@@ -33,6 +34,8 @@ type Task struct {
 	DeleteAt  time.Time `json:"-" gorm:"index"`
 }
 
+type VariablesList []Variable
+
 type AnsibleTask struct {
 	DryRun        bool   `json:"dry_run"`
 	Debug         bool   `json:"debug"`
@@ -48,6 +51,13 @@ type TerraformTask struct {
 
 type ScriptTask struct {
 	Path string `json:"path"`
+}
+
+type Variable struct {
+	Name        string `json:"name"`
+	Data        string `json:"data"`
+	Description string `json:"description,omitempty"`
+	Type        string `json:"type"`
 }
 
 func (sla *AnsibleTask) Scan(value interface{}) error {
@@ -91,6 +101,21 @@ func (sla *ScriptTask) Scan(value interface{}) error {
 }
 
 func (sla ScriptTask) Value() (driver.Value, error) {
+	val, err := json.Marshal(sla)
+	return string(val), err
+}
+
+func (sla *VariablesList) Scan(value interface{}) error {
+	var skills []Variable
+	err := json.Unmarshal([]byte(value.(string)), &skills)
+	if err != nil {
+		return err
+	}
+	*sla = skills
+	return nil
+}
+
+func (sla VariablesList) Value() (driver.Value, error) {
 	val, err := json.Marshal(sla)
 	return string(val), err
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func Setup(app bootstrap.Application) {
-	app.Fiber.Use(middleware.JwtAuthMiddleware())
+	app.FiberApiRouter.Use(middleware.JwtAuthMiddleware())
 
 	NewAuthRouter(app)
 }

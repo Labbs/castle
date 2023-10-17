@@ -17,4 +17,6 @@ func Setup(app bootstrap.Application) {
 
 	app.Bus.AddHandler("task:get_by_id", uc.GetTaskById)
 	app.Bus.AddHandler("task:get_all", uc.GetAllTasks)
+	app.Bus.AddHandler("task:get_all_by_project_id", uc.GetAllTasksByProjectId)
+	app.Bus.AddHandler("task:create", uc.CreateTask)
 }

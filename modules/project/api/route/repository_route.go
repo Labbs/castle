@@ -14,10 +14,10 @@ func NewProjectRouter(app bootstrap.Application) {
 		Logger:     app.Logger,
 	}
 
-	gr := app.Fiber.Group("/api/project")
+	gr := app.Fiber.Group("/project")
 
 	gr.Get("/all", pc.GetAllProjects)
 	gr.Get("/:id", pc.GetProjectById)
 	gr.Post("/update/:id", pc.UpdateProject)
-	// gr.Post("/create", pc.CreateProject)
+	gr.Post("/create", pc.CreateProject)
 }

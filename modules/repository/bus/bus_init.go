@@ -16,4 +16,8 @@ func Setup(app bootstrap.Application) {
 	}
 
 	app.Bus.AddHandler("repository:get_by_id", uc.GetRepositoryById)
+	app.Bus.AddHandler("repository:get_all", uc.GetAllRepositories)
+	app.Bus.AddHandler("repository:create", uc.CreateRepository)
+	app.Bus.AddHandler("repository:update", uc.UpdateRepository)
+	app.Bus.AddHandler("repository:delete", uc.DeleteRepository)
 }

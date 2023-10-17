@@ -5,7 +5,7 @@ set -x
 
 # default values for the local development environment
 API_USER="default"
-API_PASSWORD="localdev"
+API_PASSWORD="default"
 API_PORT="8080"
 API_HOST="localhost"
 API_PROTOCOL="http"

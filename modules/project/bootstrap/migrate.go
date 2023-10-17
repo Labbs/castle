@@ -10,6 +10,7 @@ func InitOrMigrateDatabase(app Application, c config.Config) error {
 	logger := app.Logger
 	err := db.AutoMigrate(
 		&domain.Project{},
+		&domain.Environment{},
 	)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("Error on migrate database")

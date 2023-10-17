@@ -10,8 +10,8 @@ import (
 	"github.com/labbs/castle/bootstrap"
 	"github.com/labbs/castle/config"
 
-	authBootstrap "github.com/labbs/castle/modules/auth/bootstrap"
 	authModule "github.com/labbs/castle/modules/auth/cmd"
+	frontendModule "github.com/labbs/castle/modules/frontend/cmd"
 	projectModule "github.com/labbs/castle/modules/project/cmd"
 	repositoryModule "github.com/labbs/castle/modules/repository/cmd"
 	taskModule "github.com/labbs/castle/modules/task/cmd"
@@ -28,7 +28,6 @@ var commands []*cli.Command = []*cli.Command{}
 
 func main() {
 	flags := bootstrap.ServerFlags()
-	flags = append(flags, authBootstrap.SessionFlags()...)
 
 	// Initialize the cli
 	app := cli.NewApp()
@@ -42,18 +41,23 @@ func main() {
 			Flags:  flags,
 			Before: altsrc.InitInputSourceWithContext(flags, altsrc.NewJSONSourceFromFlagFunc("config")),
 			Action: func(c *cli.Context) error {
+				// Init fiber, logger, database, etc
 				appBootstrap := bootstrap.App(&config.AppConfig)
 
-				// if config.AppConfig.Debug {
-				// 	appBootstrap.Logger.Debug().Interface("fiber.routes", appBootstrap.Fiber.GetRoutes()).Msg("fiber routes")
-				// }
+				// Send a message to inform that the app is running in local development mode
+				if config.AppConfig.LocalDev {
+					appBootstrap.Logger.Info().Msg("Running in local development mode")
+				}
 
+				// Initialize modules
 				authModule.Init(appBootstrap)
 				userModule.Init(appBootstrap)
 				projectModule.Init(appBootstrap)
 				taskModule.Init(appBootstrap)
 				repositoryModule.Init(appBootstrap)
+				frontendModule.Init(appBootstrap)
 
+				// Start the fiber server
 				appBootstrap.Logger.Info().Str("event", "server.start").Msg("app listening on 0.0.0.0:" + strconv.Itoa(config.AppConfig.Port))
 				return appBootstrap.Fiber.Listen(":" + strconv.Itoa(config.AppConfig.Port))
 			},

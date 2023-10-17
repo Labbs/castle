@@ -13,6 +13,7 @@ import (
 	"github.com/rs/zerolog"
 
 	"github.com/labbs/castle/config"
+	"github.com/labbs/castle/modules/frontend/engine"
 )
 
 func InitFiber(logger zerolog.Logger, c config.Config) *fiber.App {
@@ -20,6 +21,10 @@ func InitFiber(logger zerolog.Logger, c config.Config) *fiber.App {
 		JSONEncoder:           json.Marshal,
 		JSONDecoder:           json.Unmarshal,
 		DisableStartupMessage: true,
+	}
+
+	if c.InitFrontendViewEngine {
+		fconfig.Views = engine.InitViewEngine()
 	}
 
 	r := fiber.New(fconfig)

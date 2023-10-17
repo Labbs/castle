@@ -1,0 +1,39 @@
+###########################################################################################
+# Castle api requests
+###########################################################################################
+# @name login
+POST http://127.0.0.1:8080/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "default",
+    "password": "default"
+}
+
+# @name create_repository
+POST http://127.0.0.1:8080/api/repository/create HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ login.response.body.access_token }}
+
+{
+    "name": "castle-repo-example",
+    "url": "git@github.com:Labbs/castle-repo-example.git"
+}
+
+# @name create_project
+POST http://127.0.0.1:8080/api/project/create HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ login.response.body.access_token }}
+
+{
+    "name": "test-project"
+}
+
+# @name create_environment
+POST http://127.0.0.1:8080/api/environment/create HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ login.response.body.access_token }}
+
+{
+    "name": "test-project"
+}

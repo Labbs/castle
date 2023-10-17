@@ -40,6 +40,14 @@ func GenericFlags() []cli.Flag {
 			Usage:       "Enable local development mode",
 			Destination: &config.AppConfig.LocalDev,
 		}),
+		altsrc.NewBoolFlag(&cli.BoolFlag{
+			Name:        "init-frontend-view-engine",
+			Aliases:     []string{"ifve"},
+			EnvVars:     []string{"INIT_FRONTEND_VIEW_ENGINE"},
+			Value:       true,
+			Usage:       "Initialize frontend view engine",
+			Destination: &config.AppConfig.InitFrontendViewEngine,
+		}),
 	}
 }
 
@@ -58,6 +66,32 @@ func DatabaseFlags() []cli.Flag {
 			EnvVars:     []string{"DATABASE_ENGINE"},
 			Value:       "sqlite3",
 			Destination: &config.AppConfig.Database.Engine,
+		}),
+	}
+}
+
+func SessionFlags() []cli.Flag {
+	return []cli.Flag{
+		altsrc.NewStringFlag(&cli.StringFlag{
+			Name:        "session.secret-key",
+			Aliases:     []string{"ssk"},
+			EnvVars:     []string{"SESSION_SECRET_KEY"},
+			Usage:       "Session secret key",
+			Destination: &config.AppConfig.Session.SecretKey,
+		}),
+		altsrc.NewIntFlag(&cli.IntFlag{
+			Name:        "session.expire",
+			Aliases:     []string{"se"},
+			EnvVars:     []string{"SESSION_EXPIRE"},
+			Usage:       "Session expire time in minutes",
+			Destination: &config.AppConfig.Session.Expire,
+		}),
+		altsrc.NewStringFlag(&cli.StringFlag{
+			Name:        "session.issuer",
+			Aliases:     []string{"si"},
+			EnvVars:     []string{"SESSION_ISSUER"},
+			Usage:       "Session issuer",
+			Destination: &config.AppConfig.Session.Issuer,
 		}),
 	}
 }
@@ -81,5 +115,6 @@ func ServerFlags() []cli.Flag {
 	}
 	flags = append(flags, GenericFlags()...)
 	flags = append(flags, DatabaseFlags()...)
+	flags = append(flags, SessionFlags()...)
 	return flags
 }
