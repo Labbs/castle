@@ -9,5 +9,7 @@
     "secret-key": "QWERTYUIOPqwertyuiop1234567890",
     "expire": 3600000,
     "issuer": "http://localhost:8080"
-  }
+  },
+
+  "temporary-folder": "tmp/"
 }

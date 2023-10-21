@@ -48,6 +48,14 @@ func GenericFlags() []cli.Flag {
 			Usage:       "Initialize frontend view engine",
 			Destination: &config.AppConfig.InitFrontendViewEngine,
 		}),
+		altsrc.NewStringFlag(&cli.StringFlag{
+			Name:        "temporary-folder",
+			Aliases:     []string{"tf"},
+			EnvVars:     []string{"TEMPORARY_FOLDER"},
+			Value:       "/tmp",
+			Usage:       "Temporary folder",
+			Destination: &config.AppConfig.TemporaryFolder,
+		}),
 	}
 }
 

@@ -24,6 +24,7 @@ func App(initBootstrapApp *initBootstrap.Application) Application {
 	app.Fiber = initBootstrapApp.Fiber
 	app.FiberApiRouter = initBootstrapApp.FiberApiRouter
 	app.Bus = initBootstrapApp.Bus
+	InitTemporaryFolder(app.Logger)
 
 	return *app
 }

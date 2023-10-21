@@ -23,4 +23,6 @@ type Config struct {
 		Expire    int
 		Issuer    string
 	}
+
+	TemporaryFolder string
 }
