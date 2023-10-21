@@ -7,6 +7,7 @@ import (
 	"github.com/labbs/castle/modules/task/domain"
 )
 
+// Bus handler for task:get_by_id
 func (uc *Controller) GetTaskById(data interface{}) interface{} {
 	task := data.(string)
 	r, err := uc.Repository.GetTaskById(task)
@@ -16,6 +17,7 @@ func (uc *Controller) GetTaskById(data interface{}) interface{} {
 	return r
 }
 
+// Bus handler for task:get_all
 func (uc *Controller) GetAllTasks(data interface{}) interface{} {
 	r, err := uc.Repository.GetAllTasks()
 	if err != nil {
@@ -24,6 +26,7 @@ func (uc *Controller) GetAllTasks(data interface{}) interface{} {
 	return r
 }
 
+// Bus handler for task:get_all_by_project_id
 func (uc *Controller) GetAllTasksByProjectId(data interface{}) interface{} {
 	id := data.(string)
 	r, err := uc.Repository.GetAllTasksByProjectId(id)
@@ -39,6 +42,7 @@ func (uc *Controller) GetAllTasksByProjectId(data interface{}) interface{} {
 	return j
 }
 
+// Bus handler for task:create
 func (uc *Controller) CreateTask(data interface{}) interface{} {
 	var task domain.Task
 	err := json.Unmarshal(data.([]byte), &task)
@@ -54,4 +58,15 @@ func (uc *Controller) CreateTask(data interface{}) interface{} {
 	}
 
 	return map[string]string{"success": "task created"}
+}
+
+// Bus handler for task:count_by_repository_id
+func (uc *Controller) CountTasksByRepositoryId(data interface{}) interface{} {
+	id := data.(string)
+	r, err := uc.Repository.CountTasksByRepositoryId(id)
+	if err != nil {
+		return map[string]string{"error": err.Error()}
+	}
+
+	return map[string]int64{"count": r}
 }

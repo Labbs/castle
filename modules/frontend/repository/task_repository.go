@@ -55,3 +55,24 @@ func (d *TaskRepository) CreateTask(task domain.BusTaskResponse) error {
 
 	return nil
 }
+
+func (d *TaskRepository) CountTasksByRepositoryId(id string) (int64, error) {
+	responseChan := make(chan initBootstrap.Message)
+	d.BusMessages <- initBootstrap.Message{Action: "task:count_by_repository_id", Data: id, Response: responseChan}
+	response := <-responseChan
+	if response.Error != nil {
+		return 0, response.Error
+	}
+
+	var count map[string]interface{}
+	err := json.Unmarshal(response.Data.([]byte), &count)
+	if err != nil {
+		return 0, err
+	}
+
+	if val, ok := count["error"]; ok {
+		return 0, fmt.Errorf(val.(string))
+	}
+
+	return count["count"].(int64), nil
+}
