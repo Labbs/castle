@@ -14,7 +14,7 @@ func NewProjectRouter(app bootstrap.Application) {
 		Logger:     app.Logger,
 	}
 
-	gr := app.Fiber.Group("/project")
+	gr := app.FiberApiRouter.Group("/project")
 
 	gr.Get("/all", pc.GetAllProjects)
 	gr.Get("/:id", pc.GetProjectById)
