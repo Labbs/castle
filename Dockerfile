@@ -1,6 +1,6 @@
 # Path: Dockerfile
 # This is a generated file. Do not modify.
-FROM golang:1.20 as builder
+FROM golang:1.21 as builder
 
 ARG SHA
 
