@@ -6,6 +6,7 @@ type Repository struct {
 	Id          string `gorm:"primaryKey" json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description,omitempty"`
+	Type        string `json:"type,omitempty"`
 	Url         string `json:"url,omitempty"`
 	SSHKey      string `json:"ssh_key,omitempty"`
 	SSHKeyPass  string `json:"ssh_key_pass,omitempty"`
