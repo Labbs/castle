@@ -57,7 +57,7 @@ func (hc *ProjectController) Create(c *fiber.Ctx) error {
 		return c.Redirect("/app/project")
 	}
 
-	return c.Render("templates/project_new_update", d, "templates/layouts/main")
+	return c.Render("templates/project_new", d, "templates/layouts/main")
 }
 
 func (hc *ProjectController) GetProjectById(c *fiber.Ctx) error {
@@ -89,4 +89,45 @@ func (hc *ProjectController) GetProjectById(c *fiber.Ctx) error {
 	d["Histories"] = []interface{}{}
 
 	return c.Render("templates/project_view_details", d, "templates/layouts/main")
+}
+
+func (hc *ProjectController) UpdateProjectById(c *fiber.Ctx) error {
+	d := c.Locals("latestUserData").(fiber.Map)
+	d["Title"] = "Update project"
+	d["Error"] = c.Cookies("error-flash")
+	d["Success"] = c.Cookies("success-flash")
+	c.ClearCookie("error-flash", "success-flash")
+
+	project, err := hc.ProjectRepository.GetProjectById(c.Params("id"))
+	if err != nil {
+		hc.Logger.Error().Err(err).Str("event", "frontend.project.update_project_by_id").Msg("failed to get project")
+		c.Cookie(&fiber.Cookie{
+			Name:  "error-flash",
+			Value: "Internal server error - failed to get project",
+		})
+		return c.Redirect("/app/project")
+	}
+
+	if c.Method() == "POST" {
+		project.Name = c.FormValue("name")
+		project.Description = c.FormValue("description")
+
+		err := hc.ProjectRepository.UpdateProject(project)
+		if err != nil {
+			hc.Logger.Error().Err(err).Str("event", "frontend.project.update_project_by_id").Msg("failed to update project")
+			d["Error"] = "Internal server error - failed to update project"
+			return c.Render("templates/project_new_update", d, "templates/layouts/main")
+		}
+
+		c.Cookie(&fiber.Cookie{
+			Name:  "success-flash",
+			Value: "Project updated successfully",
+		})
+
+		return c.Redirect("/app/project/" + project.Id + "/view")
+	}
+
+	d["Project"] = project
+
+	return c.Render("templates/project_update", d, "templates/layouts/main")
 }

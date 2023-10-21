@@ -19,6 +19,6 @@ func NewProjectRoute(app bootstrap.Application) {
 	gr.Get("/create", lc.Create)
 	gr.Post("/create", lc.Create)
 	gr.Get("/:id/view", lc.GetProjectById)
-	gr.Get("/:id/edit", nil)
-	gr.Post("/:id/edit", nil)
+	gr.Get("/:id/update", lc.UpdateProjectById)
+	gr.Post("/:id/update", lc.UpdateProjectById)
 }
