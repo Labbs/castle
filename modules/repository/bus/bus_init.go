@@ -20,4 +20,6 @@ func Setup(app bootstrap.Application) {
 	app.Bus.AddHandler("repository:create", uc.CreateRepository)
 	app.Bus.AddHandler("repository:update", uc.UpdateRepository)
 	app.Bus.AddHandler("repository:delete", uc.DeleteRepository)
+	app.Bus.AddHandler("repository:clone", uc.CloneRepository)
+	app.Bus.AddHandler("repository:clone_test", uc.CloneTestRepository)
 }

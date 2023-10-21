@@ -4,6 +4,7 @@ import (
 	"github.com/goccy/go-json"
 	"github.com/gofiber/utils"
 	"github.com/labbs/castle/modules/repository/domain"
+	"github.com/labbs/castle/modules/repository/internal"
 )
 
 // Bus handler for repository:get_by_id
@@ -80,4 +81,36 @@ func (uc *RepositoryController) DeleteRepository(data interface{}) interface{} {
 	}
 
 	return map[string]string{"success": "repository deleted"}
+}
+
+// Bus handler for repository:clone
+func (uc *RepositoryController) CloneRepository(data interface{}) interface{} {
+	id := data.(string)
+	repo, err := uc.Repository.GetRepositoryById(id)
+	if err != nil {
+		return map[string]string{"error": err.Error()}
+	}
+
+	err = internal.CloneRepository(repo, false)
+	if err != nil {
+		return map[string]string{"error": err.Error()}
+	}
+
+	return map[string]string{"success": "repository cloned"}
+}
+
+// Bus handler for repository:clone_test
+func (uc *RepositoryController) CloneTestRepository(data interface{}) interface{} {
+	id := data.(string)
+	repo, err := uc.Repository.GetRepositoryById(id)
+	if err != nil {
+		return map[string]string{"error": err.Error()}
+	}
+
+	err = internal.CloneRepository(repo, true)
+	if err != nil {
+		return map[string]string{"error": err.Error()}
+	}
+
+	return map[string]string{"success": "repository cloned"}
 }
