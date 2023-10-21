@@ -19,7 +19,8 @@ Authorization: Bearer {{ login.response.body.access_token }}
 
 {
     "name": "castle-repo-example",
-    "url": "git@github.com:Labbs/castle-repo-example.git"
+    "url": "git@github.com:Labbs/castle-repo-example.git",
+    "type": "git"
 }
 
 ###
