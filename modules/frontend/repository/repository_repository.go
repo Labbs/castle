@@ -113,3 +113,21 @@ func (d *RepositoryRepository) DeleteRepository(id string) error {
 
 	return nil
 }
+
+func (d *RepositoryRepository) CloneTestRepository(id string) error {
+	responseChan := make(chan initBootstrap.Message)
+
+	d.BusMessages <- initBootstrap.Message{Action: "repository:clone_test", Data: id, Response: responseChan}
+	response := <-responseChan
+	if response.Error != nil {
+		return response.Error
+	}
+
+	resp := response.Data.(map[string]string)
+
+	if val, ok := resp["error"]; ok {
+		return fmt.Errorf(val)
+	}
+
+	return nil
+}
