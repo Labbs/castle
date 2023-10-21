@@ -1,0 +1,177 @@
+<div class="page-wrapper">
+  <div class="page-header d-print-none">
+    <div class="container-xl">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <h2 class="page-title">Create new task</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="row row-deck row-cards">
+        <div class="col-lg-12">
+          <div class="card">
+            <form action="/app/task/create/project/{{ .Project.Id }}" method="post" class="card card-md">
+              <div class="card-body">
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label required">Name</label>
+                  <div class="col">
+                    <input type="text" class="form-control" name="name" />
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label">Description</label>
+                  <div class="col">
+                    <input type="text" class="form-control" name="description" />
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label">Project name</label>
+                  <div class="col">
+                    <input type="text" class="form-control" name="project_name" disabled value="{{ .Project.Name }}" />
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label">Environment</label>
+                  <div class="col">
+                    <select class="form-select" name="environment">
+                      {{ range .Environments }}
+                      <option value="{{ .Id }}">{{ .Name }}</option>
+                      {{ end }}
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label">Enabled</label>
+                  <div class="col">
+                    <input type="checkbox" class="form-check-input" name="enabled" v-model="task.enabled" />
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label required">Repository</label>
+                  <div class="col">
+                    <select class="form-select" name="repository_id">
+                      {{ range .Repositories }}
+                      <option value="{{ .Id }}">{{ .Name }}</option>
+                      {{ end }}
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label required">Repository path</label>
+                  <div class="col">
+                    <input type="text" class="form-control" name="repository_path" />
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label">Task type</label>
+                  <div class="col">
+                    <select class="form-select" id="select_task_type" name="task_type">
+                      <option></option>
+                      <option value="cron">Cron</option>
+                      <option value="on-demand">On demand</option>
+                      <option value="webhook">Webhook</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3 row" style="display: none;" id="show_cron">
+                  <label class="col-3 col-form-label required">Cron</label>
+                  <div class="col">
+                    <input type="text" class="form-control" name="cron" placeholder="like */2 * * * *" />
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-3 col-form-label">Exec type</label>
+                  <div class="col">
+                    <select class="form-select" id="select_exec_type" name="exec_type">
+                      <option></option>
+                      <option value="ansible">Ansible</option>
+                      <option value="terraform">Terraform</option>
+                      <option value="shell">Shell</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="ansible_option" style="display: none;">
+                  <div class="mb-3 row">
+                    <label class="col-3 col-form-label">Dry run</label>
+                    <div class="col">
+                      <input type="checkbox" class="form-check-input" name="ansible_dry_run" />
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label class="col-3 col-form-label">Debug</label>
+                    <div class="col">
+                      <input type="checkbox" class="form-check-input" name="ansible_debyg" />
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label class="col-3 col-form-label">Verbose</label>
+                    <div class="col">
+                      <input type="checkbox" class="form-check-input" name="ansible_verbose" />
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label class="col-3 col-form-label">Playbook file</label>
+                    <div class="col">
+                      <input type="text" class="form-control" name="ansible_playbook_path" />
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label class="col-3 col-form-label">Inventory file</label>
+                    <div class="col">
+                      <input type="text" class="form-control" name="ansible_inventory_path" />
+                    </div>
+                  </div>
+                </div>
+                <div id="terraform_option" style="display: none;">
+                  <div class="mb-3 row">
+                    <label class="col-3 col-form-label">Workspace</label>
+                    <div class="col">
+                      <input type="text" class="form-control" name="terraform_workspace" />
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label class="col-3 col-form-label">Plan only</label>
+                    <div class="col">
+                      <input type="checkbox" class="form-check-input" name="terraform_plan_only" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-end">
+                <button class="btn btn-primary" type="submit">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('select_exec_type').addEventListener('change', showExecTypeOptions);
+    document.getElementById('select_task_type').addEventListener('change', showCronOption);
+    function showExecTypeOptions() {
+      var taskType = document.getElementById('select_exec_type').value;
+      if (taskType == 'ansible') {
+        document.getElementById('ansible_option').style.display = 'block';
+        document.getElementById('terraform_option').style.display = 'none';
+      } else if (taskType == 'terraform') {
+        document.getElementById('ansible_option').style.display = 'none';
+        document.getElementById('terraform_option').style.display = 'block';
+      } else if (taskType == 'shell') {
+        document.getElementById('ansible_option').style.display = 'none';
+        document.getElementById('terraform_option').style.display = 'none';
+      }
+    }
+    function showCronOption() {
+      var taskType = document.getElementById('select_task_type').value;
+      if (taskType == 'cron') {
+        document.getElementById('show_cron').style.display = 'block';
+      } else {
+        document.getElementById('show_cron').style.display = 'none';
+      }
+    }
+  </script>
+</div>

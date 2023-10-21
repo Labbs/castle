@@ -1,0 +1,100 @@
+<div class="page-wrapper">
+  <div class="page-header d-print-none">
+    <div class="container-xl">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <h2 class="page-title">Repositories List</h2>
+        </div>
+        <div class="col-12 col-md-auto ms-auto d-print-none">
+          <div class="btn-list">
+            <a href="/app/repository/create" class="btn btn-primary d-none d-sm-inline-block">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+              Create new repository
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="card">
+        {{ if .Repositories }}
+        <div class="card-table table-responsive">
+          <table class="table card-table table-vcenter text-nowrap datatable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {{ range .Repositories }}
+              <tr>
+                <td>{{ .Name }}</td>
+                <td>
+                  <a href="/app/repository/{{ .Id }}/test_clone" class="btn btn-secondary" style="margin-right: 5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-a-b-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M16 21h3c.81 0 1.48 -.67 1.48 -1.48l.02 -.02c0 -.82 -.69 -1.5 -1.5 -1.5h-3v3z"></path><path d="M16 15h2.5c.84 -.01 1.5 .66 1.5 1.5s-.66 1.5 -1.5 1.5h-2.5v-3z"></path><path d="M4 9v-4c0 -1.036 .895 -2 2 -2s2 .964 2 2v4"></path><path d="M2.99 11.98a9 9 0 0 0 9 9m9 -9a9 9 0 0 0 -9 -9"></path><path d="M8 7h-4"></path></svg>
+                    Test clone
+                  </a>
+                  <a href="/app/repository/{{ .Id }}/edit" class="btn btn-info" style="margin-right: 5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path><path d="M13.5 6.5l4 4"></path></svg>
+                    Edit
+                  </a>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ .Id }}" class="btn btn-danger d-none d-sm-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="4" y1="7" x2="20" y2="7"></line><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path></svg>
+                    Delete
+                  </a>
+                </td>
+              </tr>
+              {{ end }}
+            </tbody>
+          </table>
+        </div>
+        {{ end }}
+        {{ if not .Repositories }}
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-12">
+              <div class="card-stamp">
+                <div class="card-stamp-icon bg-yellow">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"></path><path d="M9 17v1a3 3 0 0 0 6 0v-1"></path></svg>
+                </div>
+              </div>
+              <div class="markdown text-secondary">No repositories available.</div>
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+  {{ range .Repositories }}
+  <div class="modal modal-blur fade" id="modal-delete-{{ .Id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-danger"></div>
+        <div class="modal-body text-center py-4">
+          <!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v2m0 4v.01" /><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" /></svg>
+          <h3>Are you sure?</h3>
+          <div class="text-muted">Do you really want to remove the <b>{{ .Name }}</b> repository? What you've done cannot be undone.</div>
+        </div>
+        <div class="modal-footer">
+          <div class="w-100">
+            <div class="row">
+              <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                  Cancel
+                </a></div>
+              <div class="col"><a href="/app/repository/{{ .Id }}/delete" class="btn btn-danger w-100">
+                  Delete
+                </a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ end }}
+</div>

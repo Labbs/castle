@@ -1,0 +1,74 @@
+<div class="page-wrapper">
+  <div class="page-header d-print-none">
+    <div class="container-xl">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <div class="page-pretitle"> Overview </div>
+          <h2 class="page-title">Home Castle</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="row row-deck row-cards">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">Projects</div>
+            {{ if .Projects }}
+            <div class="card-table table-responsive">
+              <table class="table table-vcenter">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{ range .Projects }}
+                  <tr>
+                    <td>{{ .Name }}</td>
+                  </tr>
+                  {{ end }}
+                </tbody>
+              </table>
+            </div>
+            {{ end }}
+            {{ if not .Projects }}
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-12">
+                  <div class="card-stamp">
+                    <div class="card-stamp-icon bg-yellow">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"></path><path d="M9 17v1a3 3 0 0 0 6 0v-1"></path></svg>
+                    </div>
+                  </div>
+                  <div class="markdown text-secondary">No projects available.</div>
+                </div>
+              </div>
+            </div>
+            {{ end }}
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">Latest tasks</div>
+            <div class="card-table table-responsive">
+            </div>
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-12">
+                  <div class="card-stamp">
+                    <div class="card-stamp-icon bg-yellow">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"></path><path d="M9 17v1a3 3 0 0 0 6 0v-1"></path></svg>
+                    </div>
+                  </div>
+                  <div class="markdown text-secondary">No tasks histories available.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

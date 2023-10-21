@@ -1,0 +1,39 @@
+<div class="page-wrapper">
+  <div class="page-header d-print-none">
+    <div class="container-xl">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <h2 class="page-title">New Project</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="row row-deck row-cards">
+        <div class="col-lg-12">
+          <form class="card" method="post" action="/app/project/create">
+            <div class="card-body">
+              <div class="mb-3 row">
+                <label class="col-3 col-form-label required">Name</label>
+                <div class="col">
+                  <input type="text" class="form-control" name="name" />
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-3 col-form-label required">Description</label>
+                <div class="col">
+                  <input type="text" class="form-control" name="description" />
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex">
+                <button type="submit" class="btn btn-primary ms-auto">Create</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
