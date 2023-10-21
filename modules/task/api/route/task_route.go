@@ -16,7 +16,7 @@ func NewTaskRouter(app bootstrap.Application) {
 		// Scheduler:  app.Scheduler,
 	}
 
-	gr := app.Fiber.Group("/task")
+	gr := app.FiberApiRouter.Group("/task")
 
 	gr.Get("/project/:id", pc.GetAllTasksByProjectId)
 	gr.Post("/create", pc.CreateTask)

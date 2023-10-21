@@ -14,7 +14,7 @@ func NewRepositoryRouter(app bootstrap.Application) {
 		Logger:     app.Logger,
 	}
 
-	gr := app.Fiber.Group("/repository")
+	gr := app.FiberApiRouter.Group("/repository")
 
 	gr.Get("/all", pc.GetAllRepositories)
 	gr.Get("/:id", pc.GetRepositoryById)
