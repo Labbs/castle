@@ -14,6 +14,7 @@ import (
 	frontendModule "github.com/labbs/castle/modules/frontend/cmd"
 	projectModule "github.com/labbs/castle/modules/project/cmd"
 	repositoryModule "github.com/labbs/castle/modules/repository/cmd"
+	schedulerModule "github.com/labbs/castle/modules/scheduler/cmd"
 	taskModule "github.com/labbs/castle/modules/task/cmd"
 
 	userModule "github.com/labbs/castle/modules/user/cmd"
@@ -50,6 +51,7 @@ func main() {
 				}
 
 				// Initialize modules
+				schedulerModule.Init(appBootstrap)
 				authModule.Init(appBootstrap)
 				userModule.Init(appBootstrap)
 				projectModule.Init(appBootstrap)
