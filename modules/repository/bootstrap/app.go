@@ -20,7 +20,7 @@ func App(initBootstrapApp *initBootstrap.Application) Application {
 	app := &Application{}
 	app.Db = initBootstrapApp.Db
 	app.Logger = InitLogger(initBootstrapApp.Logger)
-	InitOrMigrateDatabase(*app, *initBootstrapApp.AppConfig)
+	// InitOrMigrateDatabase(*app, *initBootstrapApp.AppConfig)
 	app.Fiber = initBootstrapApp.Fiber
 	app.FiberApiRouter = initBootstrapApp.FiberApiRouter
 	app.Bus = initBootstrapApp.Bus

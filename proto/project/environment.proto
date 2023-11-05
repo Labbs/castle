@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package project;
+option go_package = "github.com/labbs/castle/gen/project";
+import "google/protobuf/timestamp.proto";
+import "common/variable.proto";
+
+message Environment {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+
+  string project_id = 4;
+  repeated common.Variable variables = 5;
+
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  // @gotags: gorm:"index;"
+  google.protobuf.Timestamp deleted_at = 8;
+}

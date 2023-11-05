@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package task;
+option go_package = "github.com/labbs/castle/gen/task";
+import "google/protobuf/timestamp.proto";
+import "common/variable.proto";
+
+message Task {
+  // @gotags: gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"
+  string id = 1;
+  string name = 2;
+  string description = 3;
+
+  string project_id = 4;
+  string environment_id = 5;
+  repeated common.Variable variables = 6;
+
+  string repository_id = 7;
+  string repository_path = 8;
+
+  bool enabled = 9;
+
+  TaskType task_type = 10;
+
+  ExecType exec_type = 11;
+  AnsibleTask ansible_task = 12;
+  TerraformTask terraform_task = 13;
+  ScriptTask script_task = 14;
+
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+  // @gotags: gorm:"index;"
+  google.protobuf.Timestamp deleted_at = 17;
+}
+
+message AnsibleTask {
+  bool dry_run = 1;
+  bool debug = 2;
+  bool verbose = 3;
+  string playbook_path = 4;
+  string inventory_path = 5;
+}
+
+message TerraformTask {
+  string workspace = 1;
+  bool plan_only = 2;
+}
+
+message ScriptTask {
+  string path = 1;
+  string args = 2;
+}
+
+enum VariableType {
+  TEXT = 0;
+  SECRET = 1;
+}
+
+enum TaskType {
+  CRON = 0;
+  WEBHOOK = 1;
+  MANUAL = 2;
+}
+
+enum ExecType {
+  ANSIBLE = 0;
+  TERRAFORM = 1;
+  SCRIPT = 2;
+}

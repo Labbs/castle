@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package common;
+option go_package = "github.com/labbs/castle/gen/common";
+import "google/protobuf/timestamp.proto";
+
+message Variable {
+  string name = 1;
+  string value = 2;
+  string description = 3;
+  Type type = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+enum Type {
+  TEXT = 0;
+  SECRET = 1;
+}

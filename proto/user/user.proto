@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package user;
+option go_package = "github.com/labbs/castle/gen/user";
+import "google/protobuf/timestamp.proto";
+
+message User {
+  // @gotags: gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"
+  string id = 1;
+  // @gotags: gorm:"uniqueIndex;not null"
+  string email = 2;
+  string password = 3;
+  // @gotags: gorm:"default:''"
+  string avatar = 4;
+  // @gotags: gorm:"default:2"
+  DarkMode dark_mode = 5;
+
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  // @gotags: gorm:"index;"
+  google.protobuf.Timestamp deleted_at = 8;
+}
+
+enum DarkMode {
+  LIGHT = 0;
+  DARK = 1;
+  AUTO = 2;
+}
