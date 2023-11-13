@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
-	"github.com/labbs/castle/modules/repository/domain"
+	pb "github.com/labbs/castle/gen/repository"
 	"github.com/labbs/castle/modules/repository/repository"
 	"github.com/rs/zerolog"
 )
@@ -26,7 +26,7 @@ func (rc *RepositoryController) GetAllRepositories(c *fiber.Ctx) error {
 }
 
 func (rc *RepositoryController) CreateRepository(c *fiber.Ctx) error {
-	repository := new(domain.Repository)
+	repository := new(pb.Repository)
 	if err := c.BodyParser(repository); err != nil {
 		rc.Logger.Error().Err(err).Str("event", "api.controller.repository.create").Msg("failed to parse repository")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse repository", "status": "error"})
@@ -34,7 +34,7 @@ func (rc *RepositoryController) CreateRepository(c *fiber.Ctx) error {
 
 	repository.Id = utils.UUID()
 
-	if err := rc.Repository.CreateRepository(*repository); err != nil {
+	if err := rc.Repository.CreateRepository(repository); err != nil {
 		rc.Logger.Error().Err(err).Str("event", "api.controller.repository.create").Msg("failed to create repository")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create repository", "status": "error"})
 	}
@@ -59,13 +59,13 @@ func (rc *RepositoryController) GetRepositoryById(c *fiber.Ctx) error {
 }
 
 func (rc *RepositoryController) EditRepository(c *fiber.Ctx) error {
-	repository := new(domain.Repository)
+	repository := new(pb.Repository)
 	if err := c.BodyParser(repository); err != nil {
 		rc.Logger.Error().Err(err).Str("event", "api.controller.repository.edit").Msg("failed to parse repository")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse repository", "status": "error"})
 	}
 
-	if err := rc.Repository.EditRepository(*repository); err != nil {
+	if err := rc.Repository.EditRepository(repository); err != nil {
 		rc.Logger.Error().Err(err).Str("event", "api.controller.repository.edit").Msg("failed to edit repository")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit repository", "status": "error"})
 	}

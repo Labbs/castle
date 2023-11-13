@@ -8,15 +8,15 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"github.com/labbs/castle/config"
-	"github.com/labbs/castle/modules/repository/domain"
+	pb "github.com/labbs/castle/gen/repository"
 	"github.com/pkg/errors"
 )
 
 var publicKeys *ssh.PublicKeys = nil
 var err error
 
-func CloneRepository(repo domain.Repository, test bool) error {
-	if repo.Type == "git" {
+func CloneRepository(repo *pb.Repository, test bool) error {
+	if repo.Type == pb.Type_Git {
 		err = CloneGitRepository(repo, test)
 		if err != nil {
 			return err
@@ -25,7 +25,7 @@ func CloneRepository(repo domain.Repository, test bool) error {
 	return nil
 }
 
-func CloneGitRepository(repo domain.Repository, test bool) error {
+func CloneGitRepository(repo *pb.Repository, test bool) error {
 	path := fmt.Sprintf("%s/repos/%s", config.AppConfig.TemporaryFolder, repo.Id)
 	buf := new(bytes.Buffer)
 
@@ -34,8 +34,8 @@ func CloneGitRepository(repo domain.Repository, test bool) error {
 		Progress: buf,
 	}
 
-	if repo.SSHKey != "" {
-		publicKeys, err = ssh.NewPublicKeysFromFile("git", repo.SSHKey, repo.SSHKeyPass)
+	if repo.SshKey != "" {
+		publicKeys, err = ssh.NewPublicKeysFromFile("git", repo.SshKey, repo.SshKeyPassphrase)
 		if err != nil {
 			return err
 		}

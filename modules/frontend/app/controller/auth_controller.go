@@ -26,7 +26,7 @@ func (ac *AuthController) Login(c *fiber.Ctx) error {
 	}
 
 	if c.Method() == "POST" {
-		user, err := ac.Repository.GetUserByUsername(c.FormValue("username"))
+		user, err := ac.Repository.GetUserByUsername(c.FormValue("email"))
 		if err != nil {
 			d["Error"] = "Invalid username or password"
 			return c.Render("templates/login", d)
@@ -39,7 +39,7 @@ func (ac *AuthController) Login(c *fiber.Ctx) error {
 		}
 
 		store, _ := c.Locals("sessions").(*session.Store).Get(c)
-		store.Set("username", user.Username)
+		store.Set("email", user.Email)
 		user.Password = ""
 		m, _ := internal.StructToMap(user)
 		store.Set("profile", m)

@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/labbs/castle/modules/user/domain"
+	pb "github.com/labbs/castle/gen/user"
 	"gorm.io/gorm"
 )
 
@@ -13,13 +13,13 @@ func NewUserRepository(database *gorm.DB) UserRepository {
 	return UserRepository{database: database}
 }
 
-func (d *UserRepository) GetUserByUsername(username string) (domain.User, error) {
-	u := domain.User{}
+func (d *UserRepository) GetUserByUsername(username string) (*pb.User, error) {
+	u := pb.User{}
 	r := d.database.Where("username = ?", username).First(&u)
-	return u, r.Error
+	return &u, r.Error
 }
 
-func (d *UserRepository) UpdateUser(user domain.User) error {
+func (d *UserRepository) UpdateUser(user *pb.User) error {
 	r := d.database.Save(&user)
 	return r.Error
 }

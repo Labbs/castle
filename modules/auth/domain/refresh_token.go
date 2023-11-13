@@ -1,6 +1,6 @@
 package domain
 
-import userDomain "github.com/labbs/castle/modules/user/domain"
+import pbUser "github.com/labbs/castle/gen/user"
 
 type RefreshTokenRequest struct {
 	RefreshToken string `json:"refreshToken"`
@@ -12,8 +12,8 @@ type RefreshTokenResponse struct {
 }
 
 type RefreshTokenUsecase interface {
-	GetUserByUsername(username string) (userDomain.User, error)
-	CreateAccessToken(user *userDomain.User) (accessToken string, err error)
-	CreateRefreshToken(user *userDomain.User) (refreshToken string, err error)
+	GetUserByUsername(username string) (pbUser.User, error)
+	CreateAccessToken(user *pbUser.User) (accessToken string, err error)
+	CreateRefreshToken(user *pbUser.User) (refreshToken string, err error)
 	GetIdFromToken(token string) (string, error)
 }

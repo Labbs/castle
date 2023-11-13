@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"
-	"github.com/labbs/castle/modules/task/domain"
+	pb "github.com/labbs/castle/gen/task"
 	"github.com/labbs/castle/modules/task/repository"
 	"github.com/rs/zerolog"
 )
@@ -41,7 +41,7 @@ func (tc *TaskController) GetTaskById(c *fiber.Ctx) error {
 }
 
 func (tc *TaskController) CreateTask(c *fiber.Ctx) error {
-	task := new(domain.Task)
+	task := new(pb.Task)
 	if err := c.BodyParser(task); err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.create").Msg("failed to parse body")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse body", "status": "error"})
@@ -49,7 +49,7 @@ func (tc *TaskController) CreateTask(c *fiber.Ctx) error {
 
 	task.Id = utils.UUID()
 
-	if err := tc.Repository.CreateTask(*task); err != nil {
+	if err := tc.Repository.CreateTask(task); err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.create").Msg("failed to create task")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create task", "status": "error"})
 	}
@@ -67,7 +67,7 @@ func (tc *TaskController) CreateTask(c *fiber.Ctx) error {
 }
 
 func (tc *TaskController) EditTask(c *fiber.Ctx) error {
-	request := new(domain.Task)
+	request := new(pb.Task)
 	if err := c.BodyParser(request); err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.edit").Msg("failed to parse body")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse body", "status": "error"})
@@ -91,7 +91,7 @@ func (tc *TaskController) EditTask(c *fiber.Ctx) error {
 	// 	}
 	// }
 
-	if err := tc.Repository.EditTask(*request); err != nil {
+	if err := tc.Repository.EditTask(request); err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.edit").Msg("failed to edit task")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit task", "status": "error"})
 	}

@@ -3,7 +3,7 @@ package bus
 import (
 	"github.com/goccy/go-json"
 	"github.com/gofiber/utils"
-	"github.com/labbs/castle/modules/repository/domain"
+	pb "github.com/labbs/castle/gen/repository"
 	"github.com/labbs/castle/modules/repository/internal"
 )
 
@@ -40,7 +40,7 @@ func (uc *RepositoryController) GetAllRepositories(data interface{}) interface{}
 
 // Bus handler for repository:create
 func (uc *RepositoryController) CreateRepository(data interface{}) interface{} {
-	var repo domain.Repository
+	var repo pb.Repository
 	err := json.Unmarshal(data.([]byte), &repo)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
@@ -48,7 +48,7 @@ func (uc *RepositoryController) CreateRepository(data interface{}) interface{} {
 
 	repo.Id = utils.UUID()
 
-	err = uc.Repository.CreateRepository(repo)
+	err = uc.Repository.CreateRepository(&repo)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}
@@ -58,13 +58,13 @@ func (uc *RepositoryController) CreateRepository(data interface{}) interface{} {
 
 // Bus handler for repository:update
 func (uc *RepositoryController) UpdateRepository(data interface{}) interface{} {
-	var repo domain.Repository
+	var repo pb.Repository
 	err := json.Unmarshal(data.([]byte), &repo)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}
 
-	err = uc.Repository.UpdateRepository(repo)
+	err = uc.Repository.UpdateRepository(&repo)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}

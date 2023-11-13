@@ -15,5 +15,5 @@ func Setup(app bootstrap.Application) {
 		Repository: ur,
 	}
 
-	app.Bus.AddHandler("user:get_by_username", uc.GetByUsername)
+	app.Bus.AddHandler("user:get_by_email", uc.GetByEmail)
 }

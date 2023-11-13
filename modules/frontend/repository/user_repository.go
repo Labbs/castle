@@ -4,7 +4,7 @@ import (
 	"github.com/goccy/go-json"
 
 	initBootstrap "github.com/labbs/castle/bootstrap"
-	"github.com/labbs/castle/modules/frontend/domain"
+	pb "github.com/labbs/castle/gen/user"
 )
 
 type UserRepository struct {
@@ -15,19 +15,19 @@ func NewUserRepository(busMessages chan initBootstrap.Message) UserRepository {
 	return UserRepository{BusMessages: busMessages}
 }
 
-func (d *UserRepository) GetUserByUsername(username string) (domain.BusGetUserByUsernameResponse, error) {
+func (d *UserRepository) GetUserByUsername(email string) (*pb.User, error) {
 	responseChan := make(chan initBootstrap.Message)
-	d.BusMessages <- initBootstrap.Message{Action: "user:get_by_username", Data: username, Response: responseChan}
+	d.BusMessages <- initBootstrap.Message{Action: "user:get_by_email", Data: email, Response: responseChan}
 	response := <-responseChan
 	if response.Error != nil {
-		return domain.BusGetUserByUsernameResponse{}, response.Error
+		return &pb.User{}, response.Error
 	}
 
-	var user domain.BusGetUserByUsernameResponse
+	var user pb.User
 	err := json.Unmarshal(response.Data.([]byte), &user)
 	if err != nil {
-		return domain.BusGetUserByUsernameResponse{}, err
+		return &pb.User{}, err
 	}
 
-	return user, nil
+	return &user, nil
 }

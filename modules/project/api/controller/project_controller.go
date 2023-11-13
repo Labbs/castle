@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
-	"github.com/labbs/castle/modules/project/domain"
+	pb "github.com/labbs/castle/gen/project"
 	"github.com/labbs/castle/modules/project/repository"
 	"github.com/rs/zerolog"
 )
@@ -34,12 +34,12 @@ func (pc *ProjectController) GetProjectById(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"project": project,
+		"project": &project,
 	})
 }
 
 func (pc *ProjectController) CreateProject(c *fiber.Ctx) error {
-	project := new(domain.Project)
+	project := new(pb.Project)
 	if err := c.BodyParser(project); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.create").Msg("failed to parse project")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse project", "status": "error"})
@@ -47,7 +47,7 @@ func (pc *ProjectController) CreateProject(c *fiber.Ctx) error {
 
 	project.Id = utils.UUID()
 
-	if err := pc.Repository.CreateProject(*project); err != nil {
+	if err := pc.Repository.CreateProject(project); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.create").Msg("failed to create project")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create project", "status": "error"})
 	}
@@ -60,7 +60,7 @@ func (pc *ProjectController) CreateProject(c *fiber.Ctx) error {
 
 func (pc *ProjectController) UpdateProject(c *fiber.Ctx) error {
 	projectId := c.Params("id")
-	request := new(domain.Project)
+	request := new(pb.Project)
 	if err := c.BodyParser(request); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.update").Msg("failed to parse project")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse project", "status": "error"})
@@ -75,13 +75,13 @@ func (pc *ProjectController) UpdateProject(c *fiber.Ctx) error {
 	project.Name = request.Name
 	project.Description = request.Description
 
-	if err := pc.Repository.EditProject(project); err != nil {
+	if err := pc.Repository.EditProject(&project); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.update").Msg("failed to update project")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to update project", "status": "error"})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"project": project,
+		"project": &project,
 		"message": "Project updated",
 	})
 }

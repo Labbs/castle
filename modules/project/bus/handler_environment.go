@@ -3,7 +3,7 @@ package bus
 import (
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2/utils"
-	"github.com/labbs/castle/modules/project/domain"
+	pb "github.com/labbs/castle/gen/project"
 )
 
 // Bus handler for environment:get_by_id
@@ -40,7 +40,7 @@ func (uc *Controller) GetAllEnvironments(data interface{}) interface{} {
 
 // Bus handler for environment:create
 func (uc *Controller) CreateEnvironment(data interface{}) interface{} {
-	var environment domain.Environment
+	var environment pb.Environment
 	err := json.Unmarshal(data.([]byte), &environment)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
@@ -48,7 +48,7 @@ func (uc *Controller) CreateEnvironment(data interface{}) interface{} {
 
 	environment.Id = utils.UUID()
 
-	err = uc.EnvironmentRepository.CreateEnvironment(environment)
+	err = uc.EnvironmentRepository.CreateEnvironment(&environment)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}
@@ -58,13 +58,13 @@ func (uc *Controller) CreateEnvironment(data interface{}) interface{} {
 
 // Bus handler for environment:update
 func (uc *Controller) UpdateEnvironment(data interface{}) interface{} {
-	var environment domain.Environment
+	var environment pb.Environment
 	err := json.Unmarshal(data.([]byte), &environment)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}
 
-	err = uc.EnvironmentRepository.EditEnvironment(environment)
+	err = uc.EnvironmentRepository.EditEnvironment(&environment)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}

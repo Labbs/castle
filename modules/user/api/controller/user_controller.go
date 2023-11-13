@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/labbs/castle/modules/user/domain"
+	pb "github.com/labbs/castle/gen/user"
 	"github.com/labbs/castle/modules/user/repository"
 	"github.com/rs/zerolog"
 	"golang.org/x/crypto/bcrypt"
@@ -26,24 +26,24 @@ func (pc *UserController) Get(c *fiber.Ctx) error {
 	})
 }
 
-func (pc *UserController) EditUsername(c *fiber.Ctx) error {
+func (pc *UserController) EditEmail(c *fiber.Ctx) error {
 	user, err := pc.Repository.GetUserByUsername(c.Context().UserValue("username").(string))
 	if err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_username").Msg("failed to find user with username")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit username", "status": "error"})
 	}
 
-	request := new(domain.UsernameChangeRequest)
+	request := new(pb.EditEmailRequest)
 	if err := c.BodyParser(request); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_username").Msg("failed to parse request")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request", "status": "error"})
 	}
 
-	if user.Username != request.CurrentUsername {
+	if user.Email != request.Email {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Current username is incorrect", "status": "error"})
 	}
 
-	user.Username = request.NewUsername
+	user.Email = request.NewEmail
 	if err := pc.Repository.UpdateUser(user); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_username").Msg("failed to update user")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit username", "status": "error"})
@@ -62,7 +62,7 @@ func (pc *UserController) EditAvatar(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit avatar", "status": "error"})
 	}
 
-	request := new(domain.AvatarChangeRequest)
+	request := new(pb.EditAvatarRequest)
 	if err := c.BodyParser(request); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_avatar").Msg("failed to parse request")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request", "status": "error"})
@@ -87,7 +87,7 @@ func (pc *UserController) EditDarkMode(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit dark mode", "status": "error"})
 	}
 
-	request := new(domain.DarkModeChangeRequest)
+	request := new(pb.EditDarkModeRequest)
 	if err := c.BodyParser(request); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_dark_mode").Msg("failed to parse request")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request", "status": "error"})
@@ -112,7 +112,7 @@ func (pc *UserController) EditPassword(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit password", "status": "error"})
 	}
 
-	request := new(domain.PasswordChangeRequest)
+	request := new(pb.EditPasswordRequest)
 	if err := c.BodyParser(request); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_password").Msg("failed to parse request")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request", "status": "error"})

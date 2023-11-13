@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/gofiber/utils"
-	"github.com/labbs/castle/modules/task/domain"
+	pb "github.com/labbs/castle/gen/task"
 )
 
 // Bus handler for task:get_by_id
@@ -44,7 +44,7 @@ func (uc *Controller) GetAllTasksByProjectId(data interface{}) interface{} {
 
 // Bus handler for task:create
 func (uc *Controller) CreateTask(data interface{}) interface{} {
-	var task domain.Task
+	var task pb.Task
 	err := json.Unmarshal(data.([]byte), &task)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
@@ -52,7 +52,7 @@ func (uc *Controller) CreateTask(data interface{}) interface{} {
 
 	task.Id = utils.UUID()
 
-	err = uc.Repository.CreateTask(task)
+	err = uc.Repository.CreateTask(&task)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}

@@ -3,7 +3,8 @@ package bus
 import (
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2/utils"
-	"github.com/labbs/castle/modules/project/domain"
+	pbCommon "github.com/labbs/castle/gen/common"
+	pb "github.com/labbs/castle/gen/project"
 )
 
 // Bus handler for project:get_by_id
@@ -39,16 +40,16 @@ func (uc *Controller) GetAllProjects(data interface{}) interface{} {
 
 // Bus handler for project:create
 func (uc *Controller) CreateProject(data interface{}) interface{} {
-	var project domain.Project
+	var project pb.Project
 	err := json.Unmarshal(data.([]byte), &project)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}
 
 	project.Id = utils.UUID()
-	project.Variables = domain.VariablesList{}
+	project.Variables = []*pbCommon.Variable{}
 
-	err = uc.ProjectRepository.CreateProject(project)
+	err = uc.ProjectRepository.CreateProject(&project)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}
@@ -58,12 +59,12 @@ func (uc *Controller) CreateProject(data interface{}) interface{} {
 
 // Bus handler for project:update
 func (uc *Controller) UpdateProject(data interface{}) interface{} {
-	var project domain.Project
+	var project pb.Project
 	err := json.Unmarshal(data.([]byte), &project)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}
-	err = uc.ProjectRepository.EditProject(project)
+	err = uc.ProjectRepository.EditProject(&project)
 	if err != nil {
 		return map[string]string{"error": err.Error()}
 	}
