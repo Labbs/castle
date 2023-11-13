@@ -1,52 +1,36 @@
 package bootstrap
 
 import (
+	"context"
+	"embed"
+
 	"github.com/labbs/castle/config"
-	"github.com/labbs/castle/internal"
-	"github.com/labbs/castle/modules/user/domain"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/labbs/castle/internal/zerolog"
+	_ "github.com/labbs/castle/modules/user/bootstrap/migrations"
+	"github.com/pressly/goose/v3"
 )
 
-func InitOrMigrateDatabase(app Application, c config.Config) error {
-	db := app.Db
-	logger := app.Logger
-	err := db.AutoMigrate(
-		&domain.User{},
-	)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("Error on migrate database")
-	}
+//go:embed migrations/*.sql migrations/*.go
+var embedMigrations embed.FS
 
-	var userCount int64
-	db.Model(&domain.User{}).Count(&userCount)
-	if userCount != 0 {
-		return nil
-	}
-
-	var r []byte
-	if !c.LocalDev {
-		r = internal.RandomString(30)
-	} else {
-		r = []byte("default")
-	}
-
-	pwd, err := bcrypt.GenerateFromPassword(r, 14)
-	if err != nil {
-		logger.Error().Err(err).Msg("Error on generate password for default user")
+func MigrateDatabase(app Application, c config.Config) error {
+	goose.SetBaseFS(embedMigrations)
+	logger := app.Logger.With().Str("event", "migration").Logger()
+	goose.SetLogger(&zerolog.ZerologGooseAdapter{Logger: logger})
+	if err := goose.SetDialect(c.Database.Engine); err != nil {
 		return err
 	}
 
-	defaultUser := domain.User{
-		Username: "default",
-		Password: string(pwd),
-	}
-
-	err = db.Create(&defaultUser).Error
+	sqlDB, err := app.Db.DB()
 	if err != nil {
-		logger.Error().Err(err).Msg("Error on create default user")
-		return err
+		app.Logger.Fatal().Err(err).Msg("failed to get database connection")
 	}
 
-	logger.Info().Str("username", defaultUser.Username).Str("password", string(r)).Msg("Default user created")
+	if err := goose.UpContext(context.Background(), sqlDB, "migrations", goose.WithAllowMissing()); err != nil {
+		if err.Error() != "no change" {
+			app.Logger.Fatal().Err(err).Msg("failed to migrate database")
+		}
+	}
+
 	return nil
 }
