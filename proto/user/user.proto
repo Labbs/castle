@@ -26,3 +26,21 @@ enum DarkMode {
   DARK = 1;
   AUTO = 2;
 }
+
+message EditEmailRequest {
+  string email = 1;
+  string newEmail = 2;
+}
+
+message EditAvatarRequest {
+  string avatar = 1;
+}
+
+message EditPasswordRequest {
+  string currentPassword = 1;
+  string newPassword = 2;
+}
+
+message EditDarkModeRequest {
+  DarkMode darkMode = 1;
+}
