@@ -6,10 +6,11 @@ import (
 
 	"github.com/labbs/castle/config"
 	"github.com/labbs/castle/internal/zerolog"
+	_ "github.com/labbs/castle/modules/user/bootstrap/migrations"
 	"github.com/pressly/goose/v3"
 )
 
-//go:embed migrations/*.sql
+//go:embed migrations/*.sql migrations/*.go
 var embedMigrations embed.FS
 
 func MigrateDatabase(app Application, c config.Config) error {
