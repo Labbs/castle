@@ -85,6 +85,7 @@ func SessionFlags() []cli.Flag {
 			Aliases:     []string{"ssk"},
 			EnvVars:     []string{"SESSION_SECRET_KEY"},
 			Usage:       "Session secret key",
+			Value:       "secret",
 			Destination: &config.AppConfig.Session.SecretKey,
 		}),
 		altsrc.NewIntFlag(&cli.IntFlag{
@@ -92,6 +93,7 @@ func SessionFlags() []cli.Flag {
 			Aliases:     []string{"se"},
 			EnvVars:     []string{"SESSION_EXPIRE"},
 			Usage:       "Session expire time in minutes",
+			Value:       60,
 			Destination: &config.AppConfig.Session.Expire,
 		}),
 		altsrc.NewStringFlag(&cli.StringFlag{
@@ -99,6 +101,7 @@ func SessionFlags() []cli.Flag {
 			Aliases:     []string{"si"},
 			EnvVars:     []string{"SESSION_ISSUER"},
 			Usage:       "Session issuer",
+			Value:       "castle",
 			Destination: &config.AppConfig.Session.Issuer,
 		}),
 	}
@@ -111,6 +114,7 @@ func ServerFlags() []cli.Flag {
 			Aliases:     []string{"p"},
 			EnvVars:     []string{"PORT"},
 			Usage:       "Server Port",
+			Value:       8080,
 			Destination: &config.AppConfig.Port,
 		}),
 		altsrc.NewBoolFlag(&cli.BoolFlag{
@@ -118,6 +122,7 @@ func ServerFlags() []cli.Flag {
 			Aliases:     []string{"ehl"},
 			EnvVars:     []string{"ENABLE_HTTP_LOGS"},
 			Usage:       "Enable http server logs",
+			Value:       true,
 			Destination: &config.AppConfig.EnableHTTPLogs,
 		}),
 	}
