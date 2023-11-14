@@ -4,8 +4,8 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: local
-      POSTGRES_PASSWORD: local
-      POSTGRES_DB: local
+      POSTGRES_USER: castle
+      POSTGRES_PASSWORD: castle
+      POSTGRES_DB: castle
     ports:
       - 5432:5432
