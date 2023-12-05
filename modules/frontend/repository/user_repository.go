@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/goccy/go-json"
 	"github.com/rs/zerolog"
 
@@ -26,7 +24,6 @@ func (d *UserRepository) GetUserByEmail(email string) (domain.BusGetUserByEmailR
 	d.BusMessages <- initBootstrap.Message{Action: "user:get_by_email", Data: email, Response: responseChan}
 	response := <-responseChan
 	d.Logger.Debug().Str("event", "repository.auth.get_user_by_email").Interface("response", response).Msg("response received")
-	fmt.Println(response)
 	if response.Error != nil {
 		return domain.BusGetUserByEmailResponse{}, response.Error
 	}
