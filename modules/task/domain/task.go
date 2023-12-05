@@ -34,6 +34,10 @@ type Task struct {
 	DeleteAt  time.Time `json:"-" gorm:"index"`
 }
 
+func (t *Task) TableName() string {
+	return "task"
+}
+
 type VariablesList []Variable
 
 type AnsibleTask struct {

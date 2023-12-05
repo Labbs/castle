@@ -15,3 +15,7 @@ type Repository struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	DeleteAt  time.Time `json:"-"`
 }
+
+func (r *Repository) TableName() string {
+	return "repository"
+}

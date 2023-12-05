@@ -3,7 +3,8 @@ package domain
 import "time"
 
 type User struct {
-	Username string `gorm:"primaryKey" json:"username"`
+	Id       string `gorm:"primaryKey" json:"id"`
+	Email    string `gorm:"primaryKey" json:"email"`
 	Password string `json:"password,omitempty"`
 	Avatar   string `json:"avatar,omitempty" gorm:"default:''"`
 	DarkMode string `json:"dark_mode" gorm:"default:'auto'"`
@@ -13,9 +14,8 @@ type User struct {
 	DeleteAt  time.Time `json:"-"`
 }
 
-type UsernameChangeRequest struct {
-	CurrentUsername string `json:"current_username"`
-	NewUsername     string `json:"new_username"`
+func (User) TableName() string {
+	return "user"
 }
 
 type PasswordChangeRequest struct {

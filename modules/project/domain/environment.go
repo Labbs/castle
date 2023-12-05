@@ -14,3 +14,7 @@ type Environment struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	DeleteAt  time.Time `json:"-" gorm:"index"`
 }
+
+func (e *Environment) TableName() string {
+	return "environment"
+}
