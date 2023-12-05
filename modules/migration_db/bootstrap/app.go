@@ -12,9 +12,9 @@ type Application struct {
 	Logger zerolog.Logger
 }
 
-func App(initBootstrapApp *initBootstrap.Application) {
+func App(initBootstrapApp *initBootstrap.Application) error {
 	app := &Application{}
 	app.Db = initBootstrapApp.Db
 	app.Logger = InitLogger(initBootstrapApp.Logger)
-	MigrateDatabase(*app, *initBootstrapApp.AppConfig)
+	return MigrateDatabase(*app, *initBootstrapApp.AppConfig)
 }
