@@ -11,7 +11,7 @@ type User struct {
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	DeleteAt  time.Time `json:"-"`
+	DeletedAt time.Time `json:"-"`
 }
 
 func (User) TableName() string {
