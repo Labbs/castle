@@ -2,9 +2,9 @@ package domain
 
 import "time"
 
-type BusGetUserByUsernameResponse struct {
+type BusGetUserByEmailResponse struct {
 	Id       string `json:"id"`
-	Username string `json:"username"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 	Avatar   string `json:"avatar"`
 	DarkMode string `json:"dark_mode"`

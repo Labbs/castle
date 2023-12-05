@@ -25,14 +25,14 @@ func JwtAuthMiddleware() fiber.Handler {
 		if len(t) == 2 {
 			authorized, err := tokenutil.IsAuthorized(t[1])
 			if authorized {
-				username, err := tokenutil.GetUsernameFromToken(t[1])
+				email, err := tokenutil.GetEmailFromToken(t[1])
 				if err != nil {
 					return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 						"message": "Invalid authorization token",
 					})
 				}
 
-				c.Context().SetUserValue("username", username)
+				c.Context().SetUserValue("email", email)
 				return c.Next()
 			}
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
