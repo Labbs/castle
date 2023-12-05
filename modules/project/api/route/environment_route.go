@@ -17,4 +17,5 @@ func NewEnvironmentRouter(app bootstrap.Application) {
 	gr := app.FiberApiRouter.Group("/environment")
 
 	gr.Get("/all", pc.GetAllEnvironments)
+	gr.Post("/create", pc.CreateEnvironment)
 }
