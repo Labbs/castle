@@ -8,7 +8,7 @@ import (
 
 func NewAuthRoute(app bootstrap.Application) {
 	app.Logger.Info().Msg("Initializing frontend auth routes")
-	ur := repository.NewUserRepository(app.BusMessages)
+	ur := repository.NewUserRepository(app.BusMessages, app.Logger)
 	lc := &controller.AuthController{
 		Repository: ur,
 		Logger:     app.Logger,

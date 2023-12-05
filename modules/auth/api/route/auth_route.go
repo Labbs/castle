@@ -8,7 +8,7 @@ import (
 
 func NewAuthRouter(app bootstrap.Application) {
 	app.Logger.Info().Msg("Initializing auth routes")
-	ur := repository.NewAuthRepository(app.BusMessages)
+	ur := repository.NewAuthRepository(app.BusMessages, app.Logger)
 	lc := &controller.AuthController{
 		Repository: ur,
 		Logger:     app.Logger,
