@@ -10,7 +10,7 @@ import (
 // Bus handler for task:get_by_id
 func (uc *Controller) GetTaskById(data interface{}) (interface{}, error) {
 	task := data.(string)
-	r, err := uc.Repository.GetTaskById(task)
+	r, err := uc.Service.GetTaskById(task)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -19,7 +19,7 @@ func (uc *Controller) GetTaskById(data interface{}) (interface{}, error) {
 
 // Bus handler for task:get_all
 func (uc *Controller) GetAllTasks(data interface{}) (interface{}, error) {
-	r, err := uc.Repository.GetAllTasks()
+	r, err := uc.Service.GetAllTasks()
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -29,7 +29,7 @@ func (uc *Controller) GetAllTasks(data interface{}) (interface{}, error) {
 // Bus handler for task:get_all_by_project_id
 func (uc *Controller) GetAllTasksByProjectId(data interface{}) (interface{}, error) {
 	id := data.(string)
-	r, err := uc.Repository.GetAllTasksByProjectId(id)
+	r, err := uc.Service.GetAllTasksByProjectId(id)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -52,7 +52,7 @@ func (uc *Controller) CreateTask(data interface{}) (interface{}, error) {
 
 	task.Id = utils.UUID()
 
-	err = uc.Repository.CreateTask(task)
+	err = uc.Service.CreateTask(task)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -63,7 +63,7 @@ func (uc *Controller) CreateTask(data interface{}) (interface{}, error) {
 // Bus handler for task:count_by_repository_id
 func (uc *Controller) CountTasksByRepositoryId(data interface{}) (interface{}, error) {
 	id := data.(string)
-	r, err := uc.Repository.CountTasksByRepositoryId(id)
+	r, err := uc.Service.CountTasksByRepositoryId(id)
 	if err != nil {
 		return map[string]string{}, err
 	}

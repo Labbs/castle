@@ -19,3 +19,21 @@ type Repository struct {
 func (r *Repository) TableName() string {
 	return "repository"
 }
+
+type RepositoryService interface {
+	GetRepositoryById(id string) (Repository, error)
+	GetRepositoryByName(name string) (Repository, error)
+	GetAllRepositories() ([]Repository, error)
+	CreateRepository(repository Repository) error
+	UpdateRepository(repository Repository) error
+	DeleteRepository(id string) error
+}
+
+type RepositoryRepository interface {
+	GetRepositoryById(id string) (Repository, error)
+	GetRepositoryByName(name string) (Repository, error)
+	GetAllRepositories() ([]Repository, error)
+	CreateRepository(repository Repository) error
+	UpdateRepository(repository Repository) error
+	DeleteRepository(id string) error
+}

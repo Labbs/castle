@@ -4,17 +4,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 	"github.com/labbs/castle/modules/repository/domain"
-	"github.com/labbs/castle/modules/repository/repository"
 	"github.com/rs/zerolog"
 )
 
 type RepositoryController struct {
-	Repository repository.RepositoryRepository
-	Logger     zerolog.Logger
+	Service domain.RepositoryService
+	Logger  zerolog.Logger
 }
 
 func (rc *RepositoryController) GetAllRepositories(c *fiber.Ctx) error {
-	repositories, err := rc.Repository.GetAllRepositories()
+	repositories, err := rc.Service.GetAllRepositories()
 	if err != nil {
 		rc.Logger.Error().Err(err).Str("event", "api.controller.repository.get_all").Msg("failed to get all repositories")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get all repositories", "status": "error"})
@@ -34,7 +33,7 @@ func (rc *RepositoryController) CreateRepository(c *fiber.Ctx) error {
 
 	repository.Id = utils.UUID()
 
-	if err := rc.Repository.CreateRepository(*repository); err != nil {
+	if err := rc.Service.CreateRepository(*repository); err != nil {
 		rc.Logger.Error().Err(err).Str("event", "api.controller.repository.create").Msg("failed to create repository")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create repository", "status": "error"})
 	}
@@ -47,7 +46,7 @@ func (rc *RepositoryController) CreateRepository(c *fiber.Ctx) error {
 
 func (rc *RepositoryController) GetRepositoryById(c *fiber.Ctx) error {
 	repositoryID := c.Params("id")
-	repository, err := rc.Repository.GetRepositoryById(repositoryID)
+	repository, err := rc.Service.GetRepositoryById(repositoryID)
 	if err != nil {
 		rc.Logger.Error().Err(err).Str("event", "api.controller.repository.get_by_id").Msg("failed to get repository by id")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get repository by id", "status": "error"})
@@ -65,7 +64,7 @@ func (rc *RepositoryController) EditRepository(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse repository", "status": "error"})
 	}
 
-	if err := rc.Repository.EditRepository(*repository); err != nil {
+	if err := rc.Service.UpdateRepository(*repository); err != nil {
 		rc.Logger.Error().Err(err).Str("event", "api.controller.repository.edit").Msg("failed to edit repository")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit repository", "status": "error"})
 	}

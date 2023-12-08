@@ -10,7 +10,7 @@ import (
 // Bus handler for repository:get_by_id
 func (uc *RepositoryController) GetRepositoryById(data interface{}) (interface{}, error) {
 	id := data.(string)
-	repo, err := uc.Repository.GetRepositoryById(id)
+	repo, err := uc.Service.GetRepositoryById(id)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -25,7 +25,7 @@ func (uc *RepositoryController) GetRepositoryById(data interface{}) (interface{}
 
 // Bus handler for repository:get_all
 func (uc *RepositoryController) GetAllRepositories(data interface{}) (interface{}, error) {
-	repos, err := uc.Repository.GetAllRepositories()
+	repos, err := uc.Service.GetAllRepositories()
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -48,7 +48,7 @@ func (uc *RepositoryController) CreateRepository(data interface{}) (interface{},
 
 	repo.Id = utils.UUID()
 
-	err = uc.Repository.CreateRepository(repo)
+	err = uc.Service.CreateRepository(repo)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -64,7 +64,7 @@ func (uc *RepositoryController) UpdateRepository(data interface{}) (interface{},
 		return map[string]string{}, err
 	}
 
-	err = uc.Repository.UpdateRepository(repo)
+	err = uc.Service.UpdateRepository(repo)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -75,7 +75,7 @@ func (uc *RepositoryController) UpdateRepository(data interface{}) (interface{},
 // Bus handler for repository:delete
 func (uc *RepositoryController) DeleteRepository(data interface{}) (interface{}, error) {
 	id := data.(string)
-	err := uc.Repository.DeleteRepository(id)
+	err := uc.Service.DeleteRepository(id)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -86,7 +86,7 @@ func (uc *RepositoryController) DeleteRepository(data interface{}) (interface{},
 // Bus handler for repository:clone
 func (uc *RepositoryController) CloneRepository(data interface{}) (interface{}, error) {
 	id := data.(string)
-	repo, err := uc.Repository.GetRepositoryById(id)
+	repo, err := uc.Service.GetRepositoryById(id)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -102,7 +102,7 @@ func (uc *RepositoryController) CloneRepository(data interface{}) (interface{}, 
 // Bus handler for repository:clone_test
 func (uc *RepositoryController) CloneTestRepository(data interface{}) (interface{}, error) {
 	id := data.(string)
-	repo, err := uc.Repository.GetRepositoryById(id)
+	repo, err := uc.Service.GetRepositoryById(id)
 	if err != nil {
 		return map[string]string{}, err
 	}

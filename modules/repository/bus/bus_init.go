@@ -2,17 +2,19 @@ package bus
 
 import (
 	"github.com/labbs/castle/modules/repository/bootstrap"
+	"github.com/labbs/castle/modules/repository/domain"
 	"github.com/labbs/castle/modules/repository/repository"
+	"github.com/labbs/castle/modules/repository/service"
 )
 
 type RepositoryController struct {
-	Repository repository.RepositoryRepository
+	Service domain.RepositoryService
 }
 
 func Setup(app bootstrap.Application) {
 	ur := repository.NewRepostioryRepository(app.Db)
 	uc := &RepositoryController{
-		Repository: ur,
+		Service: service.NewRepositoryService(ur),
 	}
 
 	app.Bus.AddHandler("repository:get_by_id", uc.GetRepositoryById)

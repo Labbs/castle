@@ -4,6 +4,7 @@ import (
 	"github.com/labbs/castle/modules/task/api/controller"
 	"github.com/labbs/castle/modules/task/bootstrap"
 	"github.com/labbs/castle/modules/task/repository"
+	"github.com/labbs/castle/modules/task/service"
 )
 
 func NewTaskRouter(app bootstrap.Application) {
@@ -11,8 +12,8 @@ func NewTaskRouter(app bootstrap.Application) {
 
 	pr := repository.NewTaskRepository(app.Db)
 	pc := &controller.TaskController{
-		Repository: pr,
-		Logger:     app.Logger,
+		Service: service.NewTaskService(pr),
+		Logger:  app.Logger,
 		// Scheduler:  app.Scheduler,
 	}
 

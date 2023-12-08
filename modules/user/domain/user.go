@@ -30,3 +30,13 @@ type DarkModeChangeRequest struct {
 type AvatarChangeRequest struct {
 	Avatar string `json:"avatar"`
 }
+
+type UserRepository interface {
+	GetUserByEmail(email string) (User, error)
+	UpdateUser(user User) error
+}
+
+type UserService interface {
+	GetUserByEmail(email string) (User, error)
+	UpdateUser(user User) error
+}
