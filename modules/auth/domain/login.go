@@ -1,6 +1,6 @@
 package domain
 
 type LoginRequest struct {
-	Username string `form:"username"`
+	Email    string `form:"email"`
 	Password string `form:"password"`
 }

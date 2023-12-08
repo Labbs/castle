@@ -6,10 +6,11 @@ import (
 
 	"github.com/labbs/castle/config"
 	"github.com/labbs/castle/internal/zerolog"
+	_ "github.com/labbs/castle/modules/migration_db/bootstrap/migrations"
 	"github.com/pressly/goose/v3"
 )
 
-//go:embed migrations/*.sql
+//go:embed migrations/*.sql migrations/*.go
 var embedMigrations embed.FS
 
 func MigrateDatabase(app Application, c config.Config) error {
@@ -25,7 +26,7 @@ func MigrateDatabase(app Application, c config.Config) error {
 		app.Logger.Fatal().Err(err).Msg("failed to get database connection")
 	}
 
-	if err := goose.UpContext(context.Background(), sqlDB, "migrations", goose.WithAllowMissing()); err != nil {
+	if err := goose.UpContext(context.Background(), sqlDB, "migrations"); err != nil {
 		if err.Error() != "no change" {
 			app.Logger.Fatal().Err(err).Msg("failed to migrate database")
 		}

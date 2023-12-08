@@ -13,9 +13,9 @@ func NewUserRepository(database *gorm.DB) UserRepository {
 	return UserRepository{database: database}
 }
 
-func (d *UserRepository) GetUserByUsername(username string) (domain.User, error) {
+func (d *UserRepository) GetUserByEmail(email string) (domain.User, error) {
 	u := domain.User{}
-	r := d.database.Where("username = ?", username).First(&u)
+	r := d.database.Where("email = ?", email).First(&u)
 	return u, r.Error
 }
 

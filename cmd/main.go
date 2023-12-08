@@ -12,6 +12,7 @@ import (
 
 	authModule "github.com/labbs/castle/modules/auth/cmd"
 	frontendModule "github.com/labbs/castle/modules/frontend/cmd"
+	migrationDbModule "github.com/labbs/castle/modules/migration_db/cmd"
 	projectModule "github.com/labbs/castle/modules/project/cmd"
 	repositoryModule "github.com/labbs/castle/modules/repository/cmd"
 	taskModule "github.com/labbs/castle/modules/task/cmd"
@@ -47,6 +48,11 @@ func main() {
 				// Send a message to inform that the app is running in local development mode
 				if config.AppConfig.LocalDev {
 					appBootstrap.Logger.Info().Msg("Running in local development mode")
+				}
+
+				err := migrationDbModule.Init(appBootstrap)
+				if err != nil {
+					appBootstrap.Logger.Fatal().Err(err).Msg("Failed to migrate database")
 				}
 
 				// Initialize modules

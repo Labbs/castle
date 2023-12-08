@@ -35,7 +35,7 @@ func CloneGitRepository(repo domain.Repository, test bool) error {
 	}
 
 	if repo.SSHKey != "" {
-		publicKeys, err = ssh.NewPublicKeysFromFile("git", repo.SSHKey, repo.SSHKeyPass)
+		publicKeys, err = ssh.NewPublicKeysFromFile("git", repo.SSHKey, repo.SSHKeyPassphrase)
 		if err != nil {
 			return err
 		}

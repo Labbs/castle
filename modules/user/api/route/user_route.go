@@ -17,7 +17,8 @@ func NewUserRouter(app bootstrap.Application) {
 	gr := app.FiberApiRouter.Group("/user")
 
 	gr.Get("/", pc.Get)
-	gr.Put("/username", pc.EditUsername)
+	// too dangerous to have this endpoint
+	// gr.Put("/email", pc.EditEmail)
 	gr.Put("/avatar", pc.EditAvatar)
 	gr.Put("/password", pc.EditPassword)
 	gr.Put("/dark_mode", pc.EditDarkMode)

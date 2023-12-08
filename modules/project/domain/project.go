@@ -15,5 +15,9 @@ type Project struct {
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	DeleteAt  time.Time `json:"-" gorm:"index"`
+	DeletedAt time.Time `json:"-" gorm:"index"`
+}
+
+func (p *Project) TableName() string {
+	return "project"
 }
