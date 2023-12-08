@@ -11,7 +11,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/pkg/errors v0.9.1
 	github.com/pressly/goose/v3 v3.16.0
-	github.com/rs/zerolog v1.30.0
+	github.com/rs/zerolog v1.31.0
 	github.com/urfave/cli/v2 v2.25.7
 	golang.org/x/crypto v0.15.0
 	gorm.io/driver/mysql v1.5.1
