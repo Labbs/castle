@@ -9,7 +9,7 @@ import (
 // Bus handler for environment:get_by_id
 func (uc *Controller) GetEnvironmentById(data interface{}) (interface{}, error) {
 	id := data.(string)
-	r, err := uc.EnvironmentRepository.GetEnvironmentById(id)
+	r, err := uc.EnvironmentService.GetEnvironmentById(id)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -25,7 +25,7 @@ func (uc *Controller) GetEnvironmentById(data interface{}) (interface{}, error) 
 // Bus handler for environment:get_all
 func (uc *Controller) GetAllEnvironments(data interface{}) (interface{}, error) {
 	id := data.(string)
-	r, err := uc.EnvironmentRepository.GetAllEnvironmentsByProjectId(id)
+	r, err := uc.EnvironmentService.GetAllEnvironmentsByProjectId(id)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -48,7 +48,7 @@ func (uc *Controller) CreateEnvironment(data interface{}) (interface{}, error) {
 
 	environment.Id = utils.UUID()
 
-	err = uc.EnvironmentRepository.CreateEnvironment(environment)
+	err = uc.EnvironmentService.CreateEnvironment(environment)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -64,7 +64,7 @@ func (uc *Controller) UpdateEnvironment(data interface{}) (interface{}, error) {
 		return map[string]string{}, err
 	}
 
-	err = uc.EnvironmentRepository.EditEnvironment(environment)
+	err = uc.EnvironmentService.EditEnvironment(environment)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -75,7 +75,7 @@ func (uc *Controller) UpdateEnvironment(data interface{}) (interface{}, error) {
 // Bus handler for environment:delete
 func (uc *Controller) DeleteEnvironment(data interface{}) (interface{}, error) {
 	id := data.(string)
-	err := uc.EnvironmentRepository.DeleteEnvironment(id)
+	err := uc.EnvironmentService.DeleteEnvironment(id)
 	if err != nil {
 		return map[string]string{}, err
 	}

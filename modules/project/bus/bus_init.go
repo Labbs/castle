@@ -2,18 +2,19 @@ package bus
 
 import (
 	"github.com/labbs/castle/modules/project/bootstrap"
+	"github.com/labbs/castle/modules/project/domain"
 	"github.com/labbs/castle/modules/project/repository"
 )
 
 type Controller struct {
-	ProjectRepository     repository.ProjectRepository
-	EnvironmentRepository repository.EnvironmentRepository
+	ProjectService     domain.ProjectService
+	EnvironmentService domain.EnvironmentService
 }
 
 func Setup(app bootstrap.Application) {
 	uc := &Controller{
-		ProjectRepository:     repository.NewProjectRepository(app.Db),
-		EnvironmentRepository: repository.NewEnvironmentRepository(app.Db),
+		ProjectService:     repository.NewProjectRepository(app.Db),
+		EnvironmentService: repository.NewEnvironmentRepository(app.Db),
 	}
 
 	app.Bus.AddHandler("project:get_by_id", uc.GetProjectById)

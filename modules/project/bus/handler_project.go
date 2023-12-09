@@ -9,7 +9,7 @@ import (
 // Bus handler for project:get_by_id
 func (uc *Controller) GetProjectById(data interface{}) (interface{}, error) {
 	id := data.(string)
-	r, err := uc.ProjectRepository.GetProjectById(id)
+	r, err := uc.ProjectService.GetProjectById(id)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -24,7 +24,7 @@ func (uc *Controller) GetProjectById(data interface{}) (interface{}, error) {
 
 // Bus handler for project:get_all
 func (uc *Controller) GetAllProjects(data interface{}) (interface{}, error) {
-	r, err := uc.ProjectRepository.GetAllProjects()
+	r, err := uc.ProjectService.GetAllProjects()
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -48,7 +48,7 @@ func (uc *Controller) CreateProject(data interface{}) (interface{}, error) {
 	project.Id = utils.UUID()
 	project.Variables = domain.VariablesList{}
 
-	err = uc.ProjectRepository.CreateProject(project)
+	err = uc.ProjectService.CreateProject(project)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -63,7 +63,7 @@ func (uc *Controller) UpdateProject(data interface{}) (interface{}, error) {
 	if err != nil {
 		return map[string]string{}, err
 	}
-	err = uc.ProjectRepository.EditProject(project)
+	err = uc.ProjectService.EditProject(project)
 	if err != nil {
 		return map[string]string{}, err
 	}
@@ -74,7 +74,7 @@ func (uc *Controller) UpdateProject(data interface{}) (interface{}, error) {
 // Bus handler for project:delete
 func (uc *Controller) DeleteProject(data interface{}) (interface{}, error) {
 	id := data.(string)
-	err := uc.ProjectRepository.DeleteProject(id)
+	err := uc.ProjectService.DeleteProject(id)
 	if err != nil {
 		return map[string]string{}, err
 	}
