@@ -18,3 +18,19 @@ type Environment struct {
 func (e *Environment) TableName() string {
 	return "environment"
 }
+
+type EnvironmentRepository interface {
+	GetEnvironmentById(id string) (Environment, error)
+	GetAllEnvironmentsByProjectId(projectId string) ([]Environment, error)
+	CreateEnvironment(environment Environment) error
+	EditEnvironment(environment Environment) error
+	DeleteEnvironment(id string) error
+}
+
+type EnvironmentService interface {
+	GetEnvironmentById(id string) (Environment, error)
+	GetAllEnvironmentsByProjectId(projectId string) ([]Environment, error)
+	CreateEnvironment(environment Environment) error
+	EditEnvironment(environment Environment) error
+	DeleteEnvironment(id string) error
+}

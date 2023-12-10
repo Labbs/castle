@@ -4,14 +4,15 @@ import (
 	"github.com/labbs/castle/modules/project/api/controller"
 	"github.com/labbs/castle/modules/project/bootstrap"
 	"github.com/labbs/castle/modules/project/repository"
+	"github.com/labbs/castle/modules/project/service"
 )
 
 func NewProjectRouter(app bootstrap.Application) {
 	app.Logger.Info().Msg("Initializing project routes")
 	pr := repository.NewProjectRepository(app.Db)
 	pc := &controller.ProjectController{
-		Repository: pr,
-		Logger:     app.Logger,
+		Service: service.NewProjectService(pr),
+		Logger:  app.Logger,
 	}
 
 	gr := app.FiberApiRouter.Group("/project")

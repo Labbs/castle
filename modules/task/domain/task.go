@@ -123,3 +123,27 @@ func (sla VariablesList) Value() (driver.Value, error) {
 	val, err := json.Marshal(sla)
 	return string(val), err
 }
+
+type TaskRepository interface {
+	GetAllTasksByProjectId(projectId string) ([]Task, error)
+	GetTasksByRepositoryId(id string) error
+	CountTasksByRepositoryId(id string) (int64, error)
+	GetTaskById(id string) (Task, error)
+	CreateTask(task Task) error
+	EditTask(task Task) error
+	DeleteTask(id string) error
+	GetAllEnabledCronTasks() ([]Task, error)
+	GetAllTasks() ([]Task, error)
+}
+
+type TaskService interface {
+	GetAllTasksByProjectId(projectId string) ([]Task, error)
+	GetTasksByRepositoryId(id string) error
+	CountTasksByRepositoryId(id string) (int64, error)
+	GetTaskById(id string) (Task, error)
+	CreateTask(task Task) error
+	EditTask(task Task) error
+	DeleteTask(id string) error
+	GetAllEnabledCronTasks() ([]Task, error)
+	GetAllTasks() ([]Task, error)
+}
