@@ -26,20 +26,23 @@ func (ac *AuthController) Login(c *fiber.Ctx) error {
 	}
 
 	if c.Method() == "POST" {
-		user, err := ac.Repository.GetUserByUsername(c.FormValue("username"))
+		ac.Logger.Debug().Str("event", "frontend.controller.auth.login").Str("email", c.FormValue("email")).Msg("login request received")
+		user, err := ac.Repository.GetUserByEmail(c.FormValue("email"))
 		if err != nil {
-			d["Error"] = "Invalid username or password"
+			d["Error"] = "Invalid email or password"
+			ac.Logger.Error().Err(err).Str("event", "frontend.controller.auth.login").Msg("failed to find user")
 			return c.Render("templates/login", d)
 		}
+		ac.Logger.Debug().Str("event", "frontend.controller.auth.login").Msg("user found")
 
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(c.FormValue("password")))
 		if err != nil {
-			d["Error"] = "Invalid username or password"
+			d["Error"] = "Invalid email or password"
 			return c.Render("templates/login", d)
 		}
 
 		store, _ := c.Locals("sessions").(*session.Store).Get(c)
-		store.Set("username", user.Username)
+		store.Set("email", user.Email)
 		user.Password = ""
 		m, _ := internal.StructToMap(user)
 		store.Set("profile", m)
@@ -59,7 +62,7 @@ func (ac *AuthController) Login(c *fiber.Ctx) error {
 
 func (ac *AuthController) Logout(c *fiber.Ctx) error {
 	store, _ := c.Locals("sessions").(*session.Store).Get(c)
-	store.Delete("username")
+	store.Delete("email")
 	store.Delete("profile")
 	err := store.Destroy()
 	if err != nil {

@@ -12,7 +12,7 @@ type RefreshTokenResponse struct {
 }
 
 type RefreshTokenUsecase interface {
-	GetUserByUsername(username string) (userDomain.User, error)
+	GetUserByEmail(email string) (userDomain.User, error)
 	CreateAccessToken(user *userDomain.User) (accessToken string, err error)
 	CreateRefreshToken(user *userDomain.User) (refreshToken string, err error)
 	GetIdFromToken(token string) (string, error)

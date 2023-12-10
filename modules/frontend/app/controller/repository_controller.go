@@ -44,7 +44,7 @@ func (hc *RepositoryController) Create(c *fiber.Ctx) error {
 		repository.Description = c.FormValue("description")
 		repository.Url = c.FormValue("url")
 		repository.SSHKey = c.FormValue("ssh_key")
-		repository.SSHKeyPass = c.FormValue("ssh_key_pass")
+		repository.SSHKeyPassphrase = c.FormValue("ssh_key_passphrase")
 
 		err := hc.RepositoryRepository.CreateRepository(repository)
 		if err != nil {
@@ -86,7 +86,7 @@ func (hc *RepositoryController) UpdateRepositoryById(c *fiber.Ctx) error {
 		repo.Description = c.FormValue("description")
 		repo.Url = c.FormValue("url")
 		repo.SSHKey = c.FormValue("ssh_key")
-		repo.SSHKeyPass = c.FormValue("ssh_key_pass")
+		repo.SSHKeyPassphrase = c.FormValue("ssh_key_passphrase")
 
 		err := hc.RepositoryRepository.UpdateRepository(repo)
 		if err != nil {

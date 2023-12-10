@@ -40,7 +40,7 @@ func checkSession() fiber.Handler {
 		}
 
 		if c.Path() != "/app/auth/login" {
-			if store.Get("username") == nil {
+			if store.Get("email") == nil {
 				return c.Redirect("/app/auth/login", fiber.StatusTemporaryRedirect)
 			}
 		}
@@ -58,8 +58,8 @@ func getLatestUserData(c *fiber.Ctx, app *Application) fiber.Map {
 
 	store, _ := c.Locals("sessions").(*session.Store).Get(c)
 
-	r := repository.NewUserRepository(app.BusMessages)
-	user, err := r.GetUserByUsername(store.Get("username").(string))
+	r := repository.NewUserRepository(app.BusMessages, app.Logger)
+	user, err := r.GetUserByEmail(store.Get("email").(string))
 	if err != nil {
 		app.Logger.Error().Err(err).Str("event", "frontend.session.get_latest_user_data").Msg("failed to get user data")
 		return d

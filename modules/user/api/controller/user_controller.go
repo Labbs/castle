@@ -3,20 +3,19 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/labbs/castle/modules/user/domain"
-	"github.com/labbs/castle/modules/user/repository"
 	"github.com/rs/zerolog"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserController struct {
-	Repository repository.UserRepository
-	Logger     zerolog.Logger
+	Service domain.UserService
+	Logger  zerolog.Logger
 }
 
 func (pc *UserController) Get(c *fiber.Ctx) error {
-	user, err := pc.Repository.GetUserByUsername(c.Context().UserValue("username").(string))
+	user, err := pc.Service.GetUserByEmail(c.Context().UserValue("email").(string))
 	if err != nil {
-		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.get").Msg("failed to find user with username")
+		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.get").Msg("failed to find user with email")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get profile", "status": "error"})
 	}
 
@@ -26,39 +25,40 @@ func (pc *UserController) Get(c *fiber.Ctx) error {
 	})
 }
 
-func (pc *UserController) EditUsername(c *fiber.Ctx) error {
-	user, err := pc.Repository.GetUserByUsername(c.Context().UserValue("username").(string))
-	if err != nil {
-		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_username").Msg("failed to find user with username")
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit username", "status": "error"})
-	}
+// too dangerous to have this endpoint
+// func (pc *UserController) EditEmail(c *fiber.Ctx) error {
+// 	user, err := pc.Service.GetUserByEmail(c.Context().UserValue("email").(string))
+// 	if err != nil {
+// 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_email").Msg("failed to find user with email")
+// 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit email", "status": "error"})
+// 	}
 
-	request := new(domain.UsernameChangeRequest)
-	if err := c.BodyParser(request); err != nil {
-		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_username").Msg("failed to parse request")
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request", "status": "error"})
-	}
+// 	request := new(domain.EmailChangeRequest)
+// 	if err := c.BodyParser(request); err != nil {
+// 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_email").Msg("failed to parse request")
+// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request", "status": "error"})
+// 	}
 
-	if user.Username != request.CurrentUsername {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Current username is incorrect", "status": "error"})
-	}
+// 	if user.Email != request.CurrentEmail {
+// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Current email is incorrect", "status": "error"})
+// 	}
 
-	user.Username = request.NewUsername
-	if err := pc.Repository.UpdateUser(user); err != nil {
-		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_username").Msg("failed to update user")
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit username", "status": "error"})
-	}
+// 	user.Email = request.NewEmail
+// 	if err := pc.Service.UpdateUser(user); err != nil {
+// 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_email").Msg("failed to update user")
+// 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit email", "status": "error"})
+// 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Username updated successfully",
-		"status":  "success",
-	})
-}
+// 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+// 		"message": "Email updated successfully",
+// 		"status":  "success",
+// 	})
+// }
 
 func (pc *UserController) EditAvatar(c *fiber.Ctx) error {
-	user, err := pc.Repository.GetUserByUsername(c.Context().UserValue("username").(string))
+	user, err := pc.Service.GetUserByEmail(c.Context().UserValue("email").(string))
 	if err != nil {
-		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_avatar").Msg("failed to find user with username")
+		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_avatar").Msg("failed to find user with email")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit avatar", "status": "error"})
 	}
 
@@ -69,7 +69,7 @@ func (pc *UserController) EditAvatar(c *fiber.Ctx) error {
 	}
 
 	user.Avatar = request.Avatar
-	if err := pc.Repository.UpdateUser(user); err != nil {
+	if err := pc.Service.UpdateUser(user); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_avatar").Msg("failed to update user")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit avatar", "status": "error"})
 	}
@@ -81,9 +81,9 @@ func (pc *UserController) EditAvatar(c *fiber.Ctx) error {
 }
 
 func (pc *UserController) EditDarkMode(c *fiber.Ctx) error {
-	user, err := pc.Repository.GetUserByUsername(c.Context().UserValue("username").(string))
+	user, err := pc.Service.GetUserByEmail(c.Context().UserValue("email").(string))
 	if err != nil {
-		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_dark_mode").Msg("failed to find user with username")
+		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_dark_mode").Msg("failed to find user with email")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit dark mode", "status": "error"})
 	}
 
@@ -94,7 +94,7 @@ func (pc *UserController) EditDarkMode(c *fiber.Ctx) error {
 	}
 
 	user.DarkMode = request.DarkMode
-	if err := pc.Repository.UpdateUser(user); err != nil {
+	if err := pc.Service.UpdateUser(user); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_dark_mode").Msg("failed to update user")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit dark mode", "status": "error"})
 	}
@@ -106,9 +106,9 @@ func (pc *UserController) EditDarkMode(c *fiber.Ctx) error {
 }
 
 func (pc *UserController) EditPassword(c *fiber.Ctx) error {
-	user, err := pc.Repository.GetUserByUsername(c.Context().UserValue("username").(string))
+	user, err := pc.Service.GetUserByEmail(c.Context().UserValue("email").(string))
 	if err != nil {
-		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_password").Msg("failed to find user with username")
+		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_password").Msg("failed to find user with email")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit password", "status": "error"})
 	}
 
@@ -130,7 +130,7 @@ func (pc *UserController) EditPassword(c *fiber.Ctx) error {
 
 	user.Password = string(hashedPassword)
 
-	if err := pc.Repository.UpdateUser(user); err != nil {
+	if err := pc.Service.UpdateUser(user); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.profile.edit_password").Msg("failed to update user")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit password", "status": "error"})
 	}

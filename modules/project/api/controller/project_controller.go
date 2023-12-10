@@ -4,17 +4,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 	"github.com/labbs/castle/modules/project/domain"
-	"github.com/labbs/castle/modules/project/repository"
 	"github.com/rs/zerolog"
 )
 
 type ProjectController struct {
-	Repository repository.ProjectRepository
-	Logger     zerolog.Logger
+	Service domain.ProjectService
+	Logger  zerolog.Logger
 }
 
 func (pc *ProjectController) GetAllProjects(c *fiber.Ctx) error {
-	projects, err := pc.Repository.GetAllProjects()
+	projects, err := pc.Service.GetAllProjects()
 	if err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.get_all").Msg("failed to get all projects")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get all projects", "status": "error"})
@@ -27,7 +26,7 @@ func (pc *ProjectController) GetAllProjects(c *fiber.Ctx) error {
 
 func (pc *ProjectController) GetProjectById(c *fiber.Ctx) error {
 	projectID := c.Params("id")
-	project, err := pc.Repository.GetProjectById(projectID)
+	project, err := pc.Service.GetProjectById(projectID)
 	if err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.get_by_id").Msg("failed to get project by id")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get project by id", "status": "error"})
@@ -47,7 +46,7 @@ func (pc *ProjectController) CreateProject(c *fiber.Ctx) error {
 
 	project.Id = utils.UUID()
 
-	if err := pc.Repository.CreateProject(*project); err != nil {
+	if err := pc.Service.CreateProject(*project); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.create").Msg("failed to create project")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create project", "status": "error"})
 	}
@@ -66,7 +65,7 @@ func (pc *ProjectController) UpdateProject(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse project", "status": "error"})
 	}
 
-	project, err := pc.Repository.GetProjectById(projectId)
+	project, err := pc.Service.GetProjectById(projectId)
 	if err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.update").Msg("failed to get project by id")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get project by id", "status": "error"})
@@ -75,7 +74,7 @@ func (pc *ProjectController) UpdateProject(c *fiber.Ctx) error {
 	project.Name = request.Name
 	project.Description = request.Description
 
-	if err := pc.Repository.EditProject(project); err != nil {
+	if err := pc.Service.EditProject(project); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.update").Msg("failed to update project")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to update project", "status": "error"})
 	}
@@ -88,7 +87,7 @@ func (pc *ProjectController) UpdateProject(c *fiber.Ctx) error {
 
 func (pc *ProjectController) DeleteProject(c *fiber.Ctx) error {
 	projectID := c.Params("id")
-	if err := pc.Repository.DeleteProject(projectID); err != nil {
+	if err := pc.Service.DeleteProject(projectID); err != nil {
 		pc.Logger.Error().Err(err).Str("event", "api.controller.project.delete").Msg("failed to delete project")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to delete project", "status": "error"})
 	}

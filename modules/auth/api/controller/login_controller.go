@@ -17,35 +17,42 @@ type AuthController struct {
 }
 
 func (ac *AuthController) Login(c *fiber.Ctx) error {
+	ac.Logger.Debug().Str("event", "api.controller.auth.login").Msg("login request received")
+
 	request := new(domain.LoginRequest)
 	if err := c.BodyParser(request); err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.login").Msg("failed to parse request")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})
 	}
+	ac.Logger.Debug().Str("event", "api.controller.auth.login").Interface("request", request).Msg("request parsed successfully")
 
-	user, err := ac.Repository.GetUserByUsername(request.Username)
+	user, err := ac.Repository.GetUserByEmail(request.Email)
 	if err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.login").Msg("failed to find user")
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid username or password"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid email or password"})
 	}
+	ac.Logger.Debug().Str("event", "api.controller.auth.login").Msg("user found")
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
 	if err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.login").Msg("failed to compare password")
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid username or password"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid email or password"})
 	}
+	ac.Logger.Debug().Str("event", "api.controller.auth.login").Msg("password matched")
 
-	accessToken, err := ac.Repository.CreateAccessToken(user.Username)
+	accessToken, err := ac.Repository.CreateAccessToken(user.Email)
 	if err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.login").Msg("failed to create access token")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Internal server error"})
 	}
+	ac.Logger.Debug().Str("event", "api.controller.auth.login").Msg("access token created")
 
-	refreshToken, err := ac.Repository.CreateRefreshToken(user.Username)
+	refreshToken, err := ac.Repository.CreateRefreshToken(user.Email)
 	if err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.login").Msg("failed to create refresh token")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Internal server error"})
 	}
+	ac.Logger.Debug().Str("event", "api.controller.auth.login").Msg("refresh token created")
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"access_token":  accessToken,
@@ -60,25 +67,25 @@ func (ac *AuthController) RefreshToken(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})
 	}
 
-	userId, err := ac.Repository.GetUsernameFromToken(request.RefreshToken)
+	userId, err := ac.Repository.GetEmailFromToken(request.RefreshToken)
 	if err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.refresh_token").Msg("failed to parse refresh token")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid refresh token"})
 	}
 
-	user, err := ac.Repository.GetUserByUsername(userId)
+	user, err := ac.Repository.GetUserByEmail(userId)
 	if err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.refresh_token").Msg("failed to find user")
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid refresh token"})
 	}
 
-	accessToken, err := ac.Repository.CreateAccessToken(user.Username)
+	accessToken, err := ac.Repository.CreateAccessToken(user.Email)
 	if err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.refresh_token").Msg("failed to create access token")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Internal server error"})
 	}
 
-	refreshToken, err := ac.Repository.CreateRefreshToken(user.Username)
+	refreshToken, err := ac.Repository.CreateRefreshToken(user.Email)
 	if err != nil {
 		ac.Logger.Error().Err(err).Str("event", "api.controller.auth.refresh_token").Msg("failed to create refresh token")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Internal server error"})

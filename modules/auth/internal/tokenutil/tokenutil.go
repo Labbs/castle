@@ -9,10 +9,10 @@ import (
 	"github.com/labbs/castle/modules/auth/domain"
 )
 
-func CreateAccessToken(username string) (accessToken string, err error) {
+func CreateAccessToken(email string) (accessToken string, err error) {
 	exp := time.Now().Add(time.Second * time.Duration(config.AppConfig.Session.Expire)).Unix()
 	claims := &domain.JwtCustomClaims{
-		Username: username,
+		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    config.AppConfig.Session.Issuer,
 			ExpiresAt: &jwt.NumericDate{Time: time.Unix(exp, 0)},
@@ -26,10 +26,10 @@ func CreateAccessToken(username string) (accessToken string, err error) {
 	return t, nil
 }
 
-func CreateRefreshToken(username string) (refreshToken string, err error) {
+func CreateRefreshToken(email string) (refreshToken string, err error) {
 	exp := time.Now().Add(time.Second * time.Duration(config.AppConfig.Session.Expire)).Unix()
 	claimsRefresh := &domain.JwtCustomRefreshClaims{
-		Username: username,
+		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    config.AppConfig.Session.Issuer,
 			ExpiresAt: &jwt.NumericDate{Time: time.Unix(exp, 0)},
@@ -43,7 +43,7 @@ func CreateRefreshToken(username string) (refreshToken string, err error) {
 	return t, nil
 }
 
-func GetUsernameFromToken(token string) (username string, err error) {
+func GetEmailFromToken(token string) (email string, err error) {
 	t, err := jwt.Parse(token, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -56,8 +56,8 @@ func GetUsernameFromToken(token string) (username string, err error) {
 	}
 
 	if claims, ok := t.Claims.(jwt.MapClaims); ok && t.Valid {
-		username = claims["username"].(string)
-		return username, nil
+		email = claims["email"].(string)
+		return email, nil
 	}
 
 	return "", fmt.Errorf("invalid token")

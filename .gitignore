@@ -21,12 +21,7 @@
 go.work
 
 # air
-.air*
+.air/
 
 # sqlite
 *.db
-
-# app ui
-**/node_modules
-**/dist
-**/tmp

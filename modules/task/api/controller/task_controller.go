@@ -4,19 +4,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"
 	"github.com/labbs/castle/modules/task/domain"
-	"github.com/labbs/castle/modules/task/repository"
 	"github.com/rs/zerolog"
 )
 
 type TaskController struct {
-	Repository repository.TaskRepository
-	Logger     zerolog.Logger
+	Service domain.TaskRepository
+	Logger  zerolog.Logger
 	// Scheduler  scheduler.SchedulerController
 }
 
 func (tc *TaskController) GetAllTasksByProjectId(c *fiber.Ctx) error {
 	projectId := c.Params("id")
-	tasks, err := tc.Repository.GetAllTasksByProjectId(projectId)
+	tasks, err := tc.Service.GetAllTasksByProjectId(projectId)
 	if err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.get_all_by_project_id").Msg("failed to get all tasks by project id")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get all tasks by project id", "status": "error"})
@@ -29,7 +28,7 @@ func (tc *TaskController) GetAllTasksByProjectId(c *fiber.Ctx) error {
 
 func (tc *TaskController) GetTaskById(c *fiber.Ctx) error {
 	taskId := c.Params("id")
-	task, err := tc.Repository.GetTaskById(taskId)
+	task, err := tc.Service.GetTaskById(taskId)
 	if err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.get_by_id").Msg("failed to get task by id")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get task by id", "status": "error"})
@@ -49,7 +48,7 @@ func (tc *TaskController) CreateTask(c *fiber.Ctx) error {
 
 	task.Id = utils.UUID()
 
-	if err := tc.Repository.CreateTask(*task); err != nil {
+	if err := tc.Service.CreateTask(*task); err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.create").Msg("failed to create task")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create task", "status": "error"})
 	}
@@ -73,7 +72,7 @@ func (tc *TaskController) EditTask(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to parse body", "status": "error"})
 	}
 
-	// task, err := tc.Repository.GetTaskById(request.Id)
+	// task, err := tc.Service.GetTaskById(request.Id)
 	// if err != nil {
 	// 	tc.Logger.Error().Err(err).Str("event", "api.controller.task.edit").Msg("failed to get task by id")
 	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to get task by id", "status": "error"})
@@ -91,7 +90,7 @@ func (tc *TaskController) EditTask(c *fiber.Ctx) error {
 	// 	}
 	// }
 
-	if err := tc.Repository.EditTask(*request); err != nil {
+	if err := tc.Service.EditTask(*request); err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.edit").Msg("failed to edit task")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to edit task", "status": "error"})
 	}
@@ -103,7 +102,7 @@ func (tc *TaskController) EditTask(c *fiber.Ctx) error {
 
 func (tc *TaskController) DeleteTask(c *fiber.Ctx) error {
 	id := c.Params("id")
-	if err := tc.Repository.DeleteTask(id); err != nil {
+	if err := tc.Service.DeleteTask(id); err != nil {
 		tc.Logger.Error().Err(err).Str("event", "api.controller.task.delete").Msg("failed to delete task")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to delete task", "status": "error"})
 	}

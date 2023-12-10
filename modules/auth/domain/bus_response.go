@@ -1,6 +1,6 @@
 package domain
 
-type BusGetUserByUsernameResponse struct {
-	Username string `json:"username"`
+type BusGetUserByEmailResponse struct {
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }

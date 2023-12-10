@@ -2,9 +2,9 @@ package domain
 
 import "time"
 
-type BusGetUserByUsernameResponse struct {
+type BusGetUserByEmailResponse struct {
 	Id       string `json:"id"`
-	Username string `json:"username"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 	Avatar   string `json:"avatar"`
 	DarkMode string `json:"dark_mode"`
@@ -21,13 +21,13 @@ type BusDeleteProjectResponse struct {
 }
 
 type BusRepositoryResponse struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Type        string `json:"type"`
-	Url         string `json:"url"`
-	SSHKey      string `json:"ssh_key"`
-	SSHKeyPass  string `json:"ssh_key_pass"`
+	Id               string `json:"id"`
+	Name             string `json:"name"`
+	Description      string `json:"description"`
+	Type             string `json:"type"`
+	Url              string `json:"url"`
+	SSHKey           string `json:"ssh_key"`
+	SSHKeyPassphrase string `json:"ssh_key_passphrase"`
 }
 
 type BusTaskResponse struct {

@@ -1,18 +1,25 @@
 package bus
 
-import "github.com/goccy/go-json"
+import (
+	"github.com/goccy/go-json"
+)
 
-func (uc *UserController) GetByUsername(data interface{}) interface{} {
-	username := data.(string)
-	user, err := uc.Repository.GetUserByUsername(username)
+func (uc *UserController) GetByEmail(data interface{}) (interface{}, error) {
+	email := data.(string)
+	uc.Logger.Debug().Str("event", "bus.user.get_by_email").Str("email", email).Msg("requesting user from db")
+	user, err := uc.Service.GetUserByEmail(email)
 	if err != nil {
-		return map[string]string{"error": err.Error()}
+		uc.Logger.Debug().Err(err).Str("event", "bus.user.get_by_email").Str("email", email).Msg("failed to get user from db")
+		return map[string]string{}, err
 	}
+	uc.Logger.Debug().Str("event", "bus.user.get_by_email").Interface("user", user).Msg("user found")
 
 	j, err := json.Marshal(user)
 	if err != nil {
-		return map[string]string{"error": err.Error()}
+		uc.Logger.Debug().Err(err).Str("event", "bus.user.get_by_email").Interface("user", user).Msg("failed to marshal user")
+		return map[string]string{}, err
 	}
+	uc.Logger.Debug().Str("event", "bus.user.get_by_email").Interface("user", user).Msg("user marshalled")
 
-	return j
+	return j, nil
 }
