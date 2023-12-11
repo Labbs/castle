@@ -13,7 +13,7 @@ require (
 	github.com/pressly/goose/v3 v3.16.0
 	github.com/rs/zerolog v1.31.0
 	github.com/urfave/cli/v2 v2.25.7
-	golang.org/x/crypto v0.15.0
+	golang.org/x/crypto v0.16.0
 	gorm.io/driver/mysql v1.5.2
 	gorm.io/driver/postgres v1.5.4
 	gorm.io/driver/sqlite v1.5.4
@@ -65,7 +65,7 @@ require (
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.18.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.15.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
