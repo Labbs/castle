@@ -1,16 +1,23 @@
 package repository
 
 import (
+	"fmt"
+
+	"github.com/goccy/go-json"
+
+	initBootstrap "github.com/labbs/castle/bootstrap"
 	"github.com/labbs/castle/modules/task/domain"
+
 	"gorm.io/gorm"
 )
 
 type taskRepository struct {
-	database *gorm.DB
+	database    *gorm.DB
+	busMessages chan initBootstrap.Message
 }
 
-func NewTaskRepository(database *gorm.DB) *taskRepository {
-	return &taskRepository{database: database}
+func NewTaskRepository(database *gorm.DB, busMessages chan initBootstrap.Message) *taskRepository {
+	return &taskRepository{database: database, busMessages: busMessages}
 }
 
 func (d *taskRepository) GetAllTasksByProjectId(projectId string) ([]domain.Task, error) {
@@ -62,4 +69,26 @@ func (d *taskRepository) GetAllTasks() ([]domain.Task, error) {
 	var tasks []domain.Task
 	r := d.database.Find(&tasks)
 	return tasks, r.Error
+}
+
+func (d *taskRepository) CreateSchedulerTask(task domain.Task) error {
+	responseChan := make(chan initBootstrap.Message)
+
+	data, err := json.Marshal(task)
+	if err != nil {
+		return err
+	}
+
+	d.busMessages <- initBootstrap.Message{Action: "scheduler:cron:add", Data: data, Response: responseChan}
+	response := <-responseChan
+	if response.Error != nil {
+		return response.Error
+	}
+
+	resp := response.Data.(map[string]string)
+	if resp["success"] != "scheduler cron job added" {
+		return fmt.Errorf("scheduler cron job not added")
+	}
+
+	return nil
 }
