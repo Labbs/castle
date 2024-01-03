@@ -134,6 +134,7 @@ type TaskRepository interface {
 	DeleteTask(id string) error
 	GetAllEnabledCronTasks() ([]Task, error)
 	GetAllTasks() ([]Task, error)
+	CreateSchedulerTask(task Task) error
 }
 
 type TaskService interface {
@@ -146,4 +147,5 @@ type TaskService interface {
 	DeleteTask(id string) error
 	GetAllEnabledCronTasks() ([]Task, error)
 	GetAllTasks() ([]Task, error)
+	CreateSchedulerTask(task Task) error
 }
