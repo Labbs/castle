@@ -6,29 +6,36 @@ import (
 	"github.com/goccy/go-json"
 	initBootstrap "github.com/labbs/castle/bootstrap"
 	"github.com/labbs/castle/modules/frontend/domain"
+	"github.com/rs/zerolog"
 )
 
 type ProjectRepository struct {
 	BusMessages chan initBootstrap.Message
+	Logger      zerolog.Logger
 }
 
-func NewProjectRepository(busMessages chan initBootstrap.Message) ProjectRepository {
-	return ProjectRepository{BusMessages: busMessages}
+func NewProjectRepository(busMessages chan initBootstrap.Message, logger zerolog.Logger) ProjectRepository {
+	return ProjectRepository{BusMessages: busMessages, Logger: logger}
 }
 
 func (d *ProjectRepository) GetAllProjects() ([]domain.BusProjectsResponse, error) {
+	d.Logger.Debug().Str("event", "repository.project.get_all").Msg("requesting projects from bus")
+
 	responseChan := make(chan initBootstrap.Message)
 	d.BusMessages <- initBootstrap.Message{Action: "project:get_all", Response: responseChan}
 	response := <-responseChan
+	d.Logger.Debug().Str("event", "repository.project.get_all").Interface("response", response).Msg("response received")
 	if response.Error != nil {
 		return []domain.BusProjectsResponse{}, response.Error
 	}
+	d.Logger.Debug().Str("event", "repository.project.get_all").Interface("projects", response.Data).Msg("projects found")
 
 	var projects []domain.BusProjectsResponse
 	err := json.Unmarshal(response.Data.([]byte), &projects)
 	if err != nil {
 		return []domain.BusProjectsResponse{}, err
 	}
+	d.Logger.Debug().Str("event", "repository.project.get_all").Interface("projects", projects).Msg("projects unmarshalled")
 
 	return projects, nil
 }
