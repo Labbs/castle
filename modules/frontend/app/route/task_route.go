@@ -9,7 +9,7 @@ import (
 func NewTaskRoute(app bootstrap.Application) {
 	app.Logger.Info().Msg("Initializing frontend task routes")
 	lc := &controller.TaskController{
-		ProjectRepository:     repository.NewProjectRepository(app.BusMessages),
+		ProjectRepository:     repository.NewProjectRepository(app.BusMessages, app.Logger),
 		TaskRepository:        repository.NewTaskRepository(app.BusMessages),
 		RespositoryRepository: repository.NewRepositoryRepository(app.BusMessages),
 		Logger:                app.Logger,

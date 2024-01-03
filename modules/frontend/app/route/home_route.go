@@ -9,7 +9,7 @@ import (
 func NewHomeRoute(app bootstrap.Application) {
 	app.Logger.Info().Msg("Initializing frontend home routes")
 	lc := &controller.HomeController{
-		ProjectRepository: repository.NewProjectRepository(app.BusMessages),
+		ProjectRepository: repository.NewProjectRepository(app.BusMessages, app.Logger),
 		TaskRepository:    repository.NewTaskRepository(app.BusMessages),
 		Logger:            app.Logger,
 	}
