@@ -14,6 +14,7 @@ type Application struct {
 	Fiber          *fiber.App
 	FiberApiRouter fiber.Router
 	Bus            *initBootstrap.Module
+	BusMessages    chan initBootstrap.Message
 }
 
 func App(initBootstrapApp *initBootstrap.Application) Application {
@@ -23,6 +24,7 @@ func App(initBootstrapApp *initBootstrap.Application) Application {
 	app.Fiber = initBootstrapApp.Fiber
 	app.FiberApiRouter = initBootstrapApp.FiberApiRouter
 	app.Bus = initBootstrapApp.Bus
+	app.BusMessages = initBootstrapApp.BusMessages
 
 	return *app
 }

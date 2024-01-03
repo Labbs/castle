@@ -1,6 +1,7 @@
 package bus
 
 import (
+	initBootstrap "github.com/labbs/castle/bootstrap"
 	"github.com/labbs/castle/modules/task/bootstrap"
 	"github.com/labbs/castle/modules/task/domain"
 	"github.com/labbs/castle/modules/task/repository"
@@ -9,12 +10,13 @@ import (
 )
 
 type Controller struct {
-	Service domain.TaskService
-	Logger  zerolog.Logger
+	Service     domain.TaskService
+	Logger      zerolog.Logger
+	BusMessages chan initBootstrap.Message
 }
 
 func Setup(app bootstrap.Application) {
-	ur := repository.NewTaskRepository(app.Db)
+	ur := repository.NewTaskRepository(app.Db, app.BusMessages)
 	uc := &Controller{
 		Service: service.NewTaskService(ur),
 		Logger:  app.Logger,

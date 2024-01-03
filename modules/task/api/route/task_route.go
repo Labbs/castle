@@ -10,11 +10,10 @@ import (
 func NewTaskRouter(app bootstrap.Application) {
 	app.Logger.Info().Msg("Initializing task routes")
 
-	pr := repository.NewTaskRepository(app.Db)
+	pr := repository.NewTaskRepository(app.Db, app.BusMessages)
 	pc := &controller.TaskController{
 		Service: service.NewTaskService(pr),
 		Logger:  app.Logger,
-		// Scheduler:  app.Scheduler,
 	}
 
 	gr := app.FiberApiRouter.Group("/task")
