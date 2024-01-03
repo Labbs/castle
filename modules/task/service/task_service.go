@@ -45,3 +45,7 @@ func (s *taskService) GetAllEnabledCronTasks() ([]domain.Task, error) {
 func (s *taskService) GetAllTasks() ([]domain.Task, error) {
 	return s.taskRepository.GetAllTasks()
 }
+
+func (s *taskService) CreateSchedulerTask(task domain.Task) error {
+	return s.taskRepository.CreateSchedulerTask(task)
+}
