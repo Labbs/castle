@@ -21,5 +21,18 @@ Castle is a scheduler for execute Terraform/Ansible/Shell/... scripts from a rep
 - modules/task: the module for the task (task, task type, task status, task log, ...) - Task status and task log are not implemented
 - .dev-resources: the resources for the development (http requests for populate the database, ...)
 
+### Generate the PB models
+
+```bash
+### Install the protoc compiler
+brew install protobuf
+
+### Install the protoc go plugin
+make install-pb-deps
+
+### Generate the PB models
+make generate-pb
+```
+
 ## License
 Apache License 2.0
